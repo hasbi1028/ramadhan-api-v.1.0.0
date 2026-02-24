@@ -1,0 +1,3015 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Buku Amaliah Ramadhan</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Scheherazade+New:wght@400;700&family=Nunito:wght@400;600;700;800&display=swap"
+    rel="stylesheet" />
+  <style>
+    :root {
+      --emerald: #1a5c45;
+      --emerald-dark: #0f3d2e;
+      --emerald-light: #2a7a5c;
+      --gold: #c9963c;
+      --gold-light: #e8b86d;
+      --gold-pale: #fdf4e3;
+      --cream: #faf7f0;
+      --parchment: #f3ead8;
+      --ink: #2c2416;
+      --ink-soft: #5a4e3a;
+      --red: #c0392b;
+      --red-soft: rgba(192, 57, 43, 0.1);
+      --white: #fff;
+      --shadow: rgba(15, 61, 46, 0.18);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    html {
+      scroll-behavior: smooth
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--emerald-dark);
+      min-height: 100vh;
+      color: var(--ink);
+      overflow-x: hidden
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(201, 150, 60, .04) 40px, rgba(201, 150, 60, .04) 41px), repeating-linear-gradient(-45deg, transparent, transparent 40px, rgba(201, 150, 60, .04) 40px, rgba(201, 150, 60, .04) 41px);
+      pointer-events: none;
+      z-index: 0
+    }
+
+    /* ── SCREEN ROUTER ── */
+    .screen {
+      display: none !important;
+      position: relative;
+      z-index: 1
+    }
+
+    .screen.active {
+      display: block !important
+    }
+
+    /* Auth screen uses flex for centering */
+    #screen-auth.active {
+      display: flex !important
+    }
+
+    /* ══════════════════════════════════════
+   AUTH SCREEN
+══════════════════════════════════════ */
+    #screen-auth {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px
+    }
+
+    #screen-auth.active {
+      display: flex
+    }
+
+    .auth-box {
+      background: var(--cream);
+      border-radius: 24px;
+      padding: 32px 28px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, .3);
+      border: 1px solid rgba(201, 150, 60, .25)
+    }
+
+    .auth-brand {
+      text-align: center;
+      margin-bottom: 28px
+    }
+
+    .auth-brand .arabic {
+      font-family: 'Scheherazade New', serif;
+      font-size: 28px;
+      color: var(--emerald);
+      line-height: 1.2;
+      margin-bottom: 4px
+    }
+
+    .auth-brand h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      color: var(--emerald-dark);
+      font-weight: 700
+    }
+
+    .auth-brand p {
+      font-size: 12px;
+      color: var(--ink-soft);
+      margin-top: 2px
+    }
+
+    .auth-tabs {
+      display: flex;
+      background: var(--parchment);
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 24px;
+      gap: 4px
+    }
+
+    .auth-tab {
+      flex: 1;
+      padding: 8px;
+      border: none;
+      background: none;
+      border-radius: 9px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink-soft);
+      cursor: pointer;
+      transition: all .2s
+    }
+
+    .auth-tab.active {
+      background: var(--emerald);
+      color: var(--white)
+    }
+
+    .auth-form {
+      display: none
+    }
+
+    .auth-form.active {
+      display: block;
+      animation: fadeIn .25s ease
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px)
+      }
+
+      to {
+        opacity: 1;
+        transform: none
+      }
+    }
+
+    .field {
+      margin-bottom: 14px
+    }
+
+    .field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ink-soft);
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: .5px
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid rgba(201, 150, 60, .3);
+      border-radius: 10px;
+      background: var(--white);
+      font-family: 'Nunito', sans-serif;
+      font-size: 14px;
+      color: var(--ink);
+      outline: none;
+      transition: border .2s
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(201, 150, 60, .15)
+    }
+
+    .field select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a4e3a' fill='none' stroke-width='1.5'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 36px
+    }
+
+    .field.hidden {
+      display: none
+    }
+
+    .btn-primary {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, var(--emerald) 0%, var(--emerald-light) 100%);
+      color: var(--white);
+      border: none;
+      border-radius: 12px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all .2s;
+      letter-spacing: .3px;
+      margin-top: 4px
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(26, 92, 69, .35)
+    }
+
+    .btn-primary:disabled {
+      opacity: .6;
+      transform: none;
+      cursor: not-allowed
+    }
+
+    .btn-gold {
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: var(--emerald-dark)
+    }
+
+    .btn-gold:hover {
+      box-shadow: 0 6px 20px rgba(201, 150, 60, .4)
+    }
+
+    .btn-danger {
+      background: var(--red);
+      color: var(--white)
+    }
+
+    .auth-error {
+      background: var(--red-soft);
+      border: 1px solid rgba(192, 57, 43, .3);
+      color: var(--red);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 14px;
+      display: none
+    }
+
+    .auth-error.show {
+      display: block
+    }
+
+    .auth-success {
+      background: rgba(26, 92, 69, .08);
+      border: 1px solid rgba(26, 92, 69, .3);
+      color: var(--emerald-dark);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 14px;
+      display: none
+    }
+
+    .auth-success.show {
+      display: block
+    }
+
+    /* ── PENDING SCREEN ── */
+    #screen-pending {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px
+    }
+
+    #screen-pending.active {
+      display: flex
+    }
+
+    .pending-box {
+      background: var(--cream);
+      border-radius: 24px;
+      padding: 40px 28px;
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, .3)
+    }
+
+    .pending-box .icon {
+      font-size: 56px;
+      margin-bottom: 16px
+    }
+
+    .pending-box h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      color: var(--emerald-dark);
+      margin-bottom: 8px
+    }
+
+    .pending-box p {
+      font-size: 13px;
+      color: var(--ink-soft);
+      line-height: 1.6;
+      margin-bottom: 20px
+    }
+
+    .pending-badge {
+      display: inline-block;
+      background: rgba(201, 150, 60, .15);
+      border: 1px solid rgba(201, 150, 60, .4);
+      color: var(--gold);
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 20px
+    }
+
+    .rejected-box {
+      background: var(--red-soft);
+      border: 1px solid rgba(192, 57, 43, .3);
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 12px;
+      color: var(--red);
+      margin-bottom: 16px
+    }
+
+    /* ── CHANGE PASSWORD SCREEN ── */
+    #screen-changepw {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px
+    }
+
+    #screen-changepw.active {
+      display: flex
+    }
+
+    /* ══════════════════════════════════════
+   MAIN APP SHELL
+══════════════════════════════════════ */
+    #screen-app {
+      min-height: 100vh
+    }
+
+    #screen-app.active {
+      display: block
+    }
+
+    #shell {
+      max-width: 480px;
+      margin: 0 auto;
+      padding-bottom: 80px
+    }
+
+    /* ── APP HEADER ── */
+    .app-header {
+      background: linear-gradient(160deg, var(--emerald-dark) 0%, var(--emerald) 100%);
+      padding: 20px 20px 16px;
+      border-bottom: 3px solid var(--gold);
+      position: relative;
+      overflow: hidden
+    }
+
+    .app-header::after {
+      content: '☪';
+      position: absolute;
+      font-size: 180px;
+      color: rgba(201, 150, 60, .06);
+      top: -30px;
+      right: -20px;
+      line-height: 1;
+      pointer-events: none
+    }
+
+    .header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between
+    }
+
+    .header-brand .arabic {
+      font-family: 'Scheherazade New', serif;
+      font-size: 20px;
+      color: var(--gold-light);
+      line-height: 1
+    }
+
+    .header-brand h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 16px;
+      color: var(--white);
+      font-weight: 700
+    }
+
+    .header-user {
+      text-align: right
+    }
+
+    .header-user .uname {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--gold-light)
+    }
+
+    .header-user .urole {
+      font-size: 10px;
+      color: rgba(255, 255, 255, .55);
+      text-transform: uppercase;
+      letter-spacing: .5px
+    }
+
+    .logout-btn {
+      background: rgba(255, 255, 255, .1);
+      border: 1px solid rgba(255, 255, 255, .2);
+      color: rgba(255, 255, 255, .8);
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Nunito', sans-serif;
+      margin-top: 4px;
+      transition: all .2s
+    }
+
+    .logout-btn:hover {
+      background: rgba(255, 255, 255, .2)
+    }
+
+    /* ── NAV TABS ── */
+    .app-nav {
+      display: flex;
+      background: var(--emerald-dark);
+      border-bottom: 2px solid var(--gold);
+      position: sticky;
+      top: 0;
+      z-index: 100
+    }
+
+    .app-nav button {
+      flex: 1;
+      padding: 11px 6px;
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, .45);
+      font-family: 'Nunito', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .2s;
+      letter-spacing: .3px;
+      position: relative
+    }
+
+    .app-nav button.active {
+      color: var(--gold-light)
+    }
+
+    .app-nav button.active::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 10%;
+      width: 80%;
+      height: 2px;
+      background: var(--gold)
+    }
+
+    /* ── PAGES ── */
+    .page {
+      display: none
+    }
+
+    .page.active {
+      display: block;
+      animation: fadeIn .3s ease
+    }
+
+    /* Ensure all child elements in active page are visible */
+    .page.active * {
+      visibility: visible
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--cream);
+      margin: 14px;
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 4px 24px var(--shadow);
+      border: 1px solid rgba(201, 150, 60, .2)
+    }
+
+    .card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 15px;
+      color: var(--emerald-dark);
+      font-weight: 700;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    /* ── DAY GRID ── */
+    .day-selector-wrap {
+      background: var(--emerald);
+      margin: 14px;
+      border-radius: 16px;
+      padding: 14px;
+      border: 1px solid rgba(201, 150, 60, .3)
+    }
+
+    .day-selector-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: rgba(255, 255, 255, .6);
+      margin-bottom: 8px
+    }
+
+    .day-grid {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 6px
+    }
+
+    .day-btn {
+      aspect-ratio: 1;
+      border: 2px solid rgba(26, 92, 69, .2);
+      border-radius: 10px;
+      background: var(--cream);
+      color: var(--emerald-dark);
+      font-size: 13px;
+      font-weight: 800;
+      font-family: 'Nunito', sans-serif;
+      cursor: pointer;
+      transition: all .18s;
+      position: relative;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.06)
+    }
+
+    .day-btn:hover {
+      background: rgba(26, 92, 69, .08);
+      border-color: var(--emerald);
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1)
+    }
+
+    .day-btn.selected {
+      background: var(--emerald);
+      color: var(--white);
+      border-color: var(--emerald-dark);
+      box-shadow: 0 3px 10px rgba(26, 92, 69, 0.3)
+    }
+
+    .day-btn.has-data::after {
+      content: '';
+      position: absolute;
+      bottom: 4px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--gold)
+    }
+
+    .day-btn.selected.has-data::after {
+      background: var(--white)
+    }
+
+    /* ── CHECKLIST ── */
+    .checklist {
+      display: flex;
+      flex-direction: column;
+      gap: 7px
+    }
+
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      background: var(--parchment);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all .18s;
+      border: 1.5px solid transparent;
+      user-select: none
+    }
+
+    .check-item:hover {
+      border-color: rgba(201, 150, 60, .3)
+    }
+
+    .check-item.checked {
+      background: rgba(26, 92, 69, .08);
+      border-color: var(--emerald-light)
+    }
+
+    .check-box {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      border: 2px solid #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all .18s;
+      font-size: 13px
+    }
+
+    .check-item.checked .check-box {
+      background: var(--emerald);
+      border-color: var(--emerald);
+      color: var(--white)
+    }
+
+    .check-label {
+      font-size: 13px;
+      font-weight: 600;
+      flex: 1;
+      color: var(--ink)
+    }
+
+    .check-item.checked .check-label {
+      color: var(--emerald-dark)
+    }
+
+    .check-pts {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--gold);
+      background: rgba(201, 150, 60, .12);
+      padding: 2px 6px;
+      border-radius: 20px
+    }
+
+    /* ── QURAN & CATATAN ── */
+    .quran-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      background: var(--parchment);
+      border-radius: 10px;
+      border: 1.5px solid rgba(201, 150, 60, .3);
+      margin-top: 10px
+    }
+
+    .quran-input-wrap label {
+      font-size: 13px;
+      font-weight: 600;
+      flex: 1;
+      color: var(--ink)
+    }
+
+    .quran-input-wrap input {
+      width: 60px;
+      padding: 6px 8px;
+      border-radius: 8px;
+      border: 1.5px solid var(--gold);
+      background: var(--white);
+      font-family: 'Nunito', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--emerald-dark);
+      text-align: center;
+      outline: none
+    }
+
+    .quran-input-wrap input:focus {
+      box-shadow: 0 0 0 3px rgba(201, 150, 60, .2)
+    }
+
+    .quran-input-wrap span {
+      font-size: 12px;
+      color: var(--ink-soft)
+    }
+
+    /* ── PARENT VERIFICATION ── */
+    .parent-verify-section {
+      background: var(--cream);
+      border: 1px solid rgba(201, 150, 60, .2);
+      border-radius: 16px;
+      padding: 18px;
+      margin-top: 0;
+      margin-bottom: 0;
+      box-shadow: 0 4px 24px var(--shadow);
+      display: block !important;
+      visibility: visible !important
+    }
+
+    .parent-verify-section.verified {
+      background: var(--cream);
+      border: 1px solid var(--emerald);
+      box-shadow: 0 4px 24px rgba(26, 92, 69, .15)
+    }
+
+    .parent-verify-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px dashed rgba(201, 150, 60, .2)
+    }
+
+    .parent-verify-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--emerald-dark);
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    .verify-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 9px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08)
+    }
+
+    .verify-badge.pending {
+      background: rgba(201, 150, 60, .12);
+      color: var(--gold);
+      border: 1px solid rgba(201, 150, 60, .3)
+    }
+
+    .verify-badge.verified {
+      background: rgba(26, 92, 69, .1);
+      color: var(--emerald);
+      border: 1px solid rgba(26, 92, 69, .3)
+    }
+
+    .parent-verify-section .field label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ink-soft);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      margin-bottom: 6px;
+      display: block
+    }
+
+    .parent-verify-section .field input {
+      width: 100%;
+      padding: 11px 13px;
+      border: 1.5px solid rgba(201, 150, 60, .25);
+      border-radius: 10px;
+      background: var(--white);
+      font-family: 'Nunito', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      outline: none;
+      transition: all .2s
+    }
+
+    .parent-verify-section .field input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(201, 150, 60, .1);
+      background: #fff
+    }
+
+    .parent-verify-section .field input:disabled {
+      background: rgba(0,0,0,0.02);
+      border-color: rgba(0,0,0,0.08);
+      color: rgba(0,0,0,0.35);
+      cursor: not-allowed
+    }
+
+    .signature-canvas {
+      width: 100%;
+      height: 120px;
+      border: 2px dashed rgba(201, 150, 60, .35);
+      border-radius: 10px;
+      background: var(--white);
+      touch-action: none;
+      cursor: crosshair;
+      display: block !important;
+      visibility: visible !important;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.04)
+    }
+
+    .signature-canvas.verified {
+      border-style: solid;
+      border-color: var(--emerald);
+      background: #fff
+    }
+
+    .signature-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px
+    }
+
+    .btn-signature {
+      padding: 5px 12px;
+      border-radius: 8px;
+      border: 1.5px solid rgba(201, 150, 60, .25);
+      background: var(--parchment);
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--ink);
+      cursor: pointer;
+      transition: all .2s
+    }
+
+    .btn-signature:hover {
+      background: rgba(201, 150, 60, .15);
+      border-color: var(--gold)
+    }
+
+    .btn-signature.primary {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: var(--emerald-dark)
+    }
+
+    .btn-signature.primary:hover {
+      background: var(--gold-light);
+      border-color: var(--gold-light)
+    }
+
+    .verified-info {
+      margin-top: 12px;
+      padding: 12px;
+      background: rgba(26, 92, 69, .06);
+      border-radius: 10px;
+      border: 1px solid rgba(26, 92, 69, .15)
+    }
+
+    .verified-info-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 6px;
+      font-size: 11px;
+      color: var(--ink)
+    }
+
+    .verified-info-row:last-child {
+      margin-bottom: 0
+    }
+
+    .verified-info-label {
+      font-weight: 700;
+      color: var(--ink-soft);
+      min-width: 75px
+    }
+
+    .verified-info-value {
+      font-weight: 600;
+      color: var(--emerald)
+    }
+
+    .checkbox-verify-wrap {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px;
+      background: var(--white);
+      border-radius: 10px;
+      margin-top: 10px
+    }
+
+    .checkbox-verify-wrap input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      flex-shrink: 0
+    }
+
+    .checkbox-verify-label {
+      font-size: 12px;
+      color: var(--ink);
+      line-height: 1.5
+    }
+
+    .note-area {
+      width: 100%;
+      border: 1.5px solid rgba(201, 150, 60, .3);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 13px;
+      color: var(--ink);
+      background: var(--parchment);
+      resize: vertical;
+      min-height: 70px;
+      outline: none;
+      transition: border .2s
+    }
+
+    .note-area:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(201, 150, 60, .15)
+    }
+
+    /* ── SAVE BTN ── */
+    .save-btn {
+      display: block;
+      width: calc(100% - 28px);
+      margin: 0 14px;
+      padding: 13px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: var(--emerald-dark);
+      border: none;
+      border-radius: 12px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all .2s;
+      box-shadow: 0 4px 16px rgba(201, 150, 60, .35)
+    }
+
+    .save-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(201, 150, 60, .45)
+    }
+
+    .save-btn:disabled {
+      opacity: .6;
+      transform: none
+    }
+
+    /* ── REKAP ── */
+    .rekap-header {
+      background: linear-gradient(135deg, var(--emerald), var(--emerald-dark));
+      margin: 14px;
+      border-radius: 16px;
+      padding: 18px;
+      border: 1px solid rgba(201, 150, 60, .3);
+      text-align: center
+    }
+
+    .rekap-header h2 {
+      font-family: 'Playfair Display', serif;
+      color: var(--gold-light);
+      font-size: 17px;
+      margin-bottom: 3px
+    }
+
+    .rekap-header p {
+      color: rgba(255, 255, 255, .6);
+      font-size: 12px
+    }
+
+    .ring-outer {
+      position: relative;
+      width: 110px;
+      height: 110px;
+      margin: 14px auto 6px
+    }
+
+    .ring-outer svg {
+      transform: rotate(-90deg)
+    }
+
+    .ring-bg {
+      fill: none;
+      stroke: rgba(255, 255, 255, .1);
+      stroke-width: 10
+    }
+
+    .ring-fg {
+      fill: none;
+      stroke: var(--gold);
+      stroke-width: 10;
+      stroke-linecap: round;
+      transition: stroke-dashoffset .8s ease
+    }
+
+    .ring-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center
+    }
+
+    .ring-pct {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--gold-light);
+      font-family: 'Playfair Display', serif
+    }
+
+    .ring-lbl {
+      font-size: 10px;
+      color: rgba(255, 255, 255, .6)
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin: 0 14px
+    }
+
+    .stat-card {
+      background: var(--cream);
+      border-radius: 12px;
+      padding: 12px;
+      border: 1px solid rgba(201, 150, 60, .2);
+      text-align: center
+    }
+
+    .stat-val {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--emerald-dark);
+      line-height: 1
+    }
+
+    .stat-key {
+      font-size: 11px;
+      color: var(--ink-soft);
+      margin-top: 3px
+    }
+
+    .day-rekap-row {
+      display: flex;
+      align-items: center;
+      padding: 9px 0;
+      border-bottom: 1px dashed rgba(201, 150, 60, .2);
+      gap: 10px;
+      cursor: pointer
+    }
+
+    .day-rekap-row:last-child {
+      border-bottom: none
+    }
+
+    .day-num {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: var(--emerald);
+      color: var(--gold-light);
+      font-weight: 800;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0
+    }
+
+    .day-rekap-info {
+      flex: 1
+    }
+
+    .day-rekap-info .dname {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink)
+    }
+
+    .day-rekap-info .dstat {
+      font-size: 11px;
+      color: var(--ink-soft)
+    }
+
+    .day-rekap-bar-wrap {
+      width: 56px;
+      height: 5px;
+      background: rgba(201, 150, 60, .15);
+      border-radius: 3px;
+      overflow: hidden
+    }
+
+    .day-rekap-bar {
+      height: 100%;
+      background: var(--gold);
+      border-radius: 3px;
+      transition: width .5s
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 30px 16px;
+      color: var(--ink-soft)
+    }
+
+    .empty-state .big {
+      font-size: 38px;
+      margin-bottom: 8px
+    }
+
+    .empty-state p {
+      font-size: 13px;
+      line-height: 1.5
+    }
+
+    /* ── ADMIN / WALI PANELS ── */
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 15px;
+      color: var(--emerald-dark);
+      font-weight: 700;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700
+    }
+
+    .badge-pending {
+      background: rgba(201, 150, 60, .15);
+      color: var(--gold);
+      border: 1px solid rgba(201, 150, 60, .4)
+    }
+
+    .badge-approved {
+      background: rgba(26, 92, 69, .1);
+      color: var(--emerald);
+      border: 1px solid rgba(26, 92, 69, .3)
+    }
+
+    .badge-rejected {
+      background: var(--red-soft);
+      color: var(--red);
+      border: 1px solid rgba(192, 57, 43, .3)
+    }
+
+    .user-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px dashed rgba(201, 150, 60, .18)
+    }
+
+    .user-row:last-child {
+      border-bottom: none
+    }
+
+    .user-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: var(--emerald);
+      color: var(--gold-light);
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-weight: 700
+    }
+
+    .user-info {
+      flex: 1;
+      min-width: 0
+    }
+
+    .user-info .uname {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis
+    }
+
+    .user-info .umeta {
+      font-size: 11px;
+      color: var(--ink-soft)
+    }
+
+    .user-actions {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0
+    }
+
+    .btn-sm {
+      padding: 5px 10px;
+      border-radius: 8px;
+      border: none;
+      font-family: 'Nunito', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .18s
+    }
+
+    .btn-approve {
+      background: rgba(26, 92, 69, .12);
+      color: var(--emerald);
+      border: 1px solid rgba(26, 92, 69, .3)
+    }
+
+    .btn-approve:hover {
+      background: var(--emerald);
+      color: var(--white)
+    }
+
+    .btn-reject {
+      background: var(--red-soft);
+      color: var(--red);
+      border: 1px solid rgba(192, 57, 43, .3)
+    }
+
+    .btn-reject:hover {
+      background: var(--red);
+      color: var(--white)
+    }
+
+    .stat-big-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 8px
+    }
+
+    .stat-big {
+      background: var(--cream);
+      border-radius: 12px;
+      padding: 14px;
+      border: 1px solid rgba(201, 150, 60, .2);
+      text-align: center
+    }
+
+    .stat-big .val {
+      font-family: 'Playfair Display', serif;
+      font-size: 30px;
+      color: var(--emerald-dark)
+    }
+
+    .stat-big .key {
+      font-size: 11px;
+      color: var(--ink-soft);
+      margin-top: 2px
+    }
+
+    .rekap-siswa-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 0;
+      border-bottom: 1px dashed rgba(201, 150, 60, .18)
+    }
+
+    .rekap-siswa-row:last-child {
+      border-bottom: none
+    }
+
+    .rekap-siswa-row .rname {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink);
+      flex: 1
+    }
+
+    .rekap-siswa-row .rmeta {
+      font-size: 11px;
+      color: var(--ink-soft)
+    }
+
+    .rekap-mini-bar {
+      width: 60px
+    }
+
+    .rmb-wrap {
+      height: 5px;
+      background: rgba(201, 150, 60, .15);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: 4px
+    }
+
+    .rmb-fill {
+      height: 100%;
+      background: var(--gold);
+      border-radius: 3px
+    }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed;
+      bottom: 90px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--emerald-dark);
+      color: var(--gold-light);
+      padding: 9px 20px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 700;
+      border: 1px solid var(--gold);
+      opacity: 0;
+      pointer-events: none;
+      transition: all .3s;
+      z-index: 9999;
+      white-space: nowrap
+    }
+
+    #toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0)
+    }
+
+    /* ── LOADING ── */
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, .3);
+      border-top-color: var(--white);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      vertical-align: middle;
+      margin-right: 6px
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg)
+      }
+    }
+
+    .loading-screen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 200px;
+      color: rgba(255, 255, 255, .6);
+      font-size: 14px;
+      gap: 10px
+    }
+
+    /* ── INFO PAGE ── */
+    .info-banner {
+      background: linear-gradient(135deg, var(--gold-pale), var(--parchment));
+      margin: 14px;
+      border-radius: 16px;
+      padding: 18px;
+      border: 2px solid rgba(201, 150, 60, .3);
+      text-align: center
+    }
+
+    .info-banner h2 {
+      font-family: 'Scheherazade New', serif;
+      font-size: 26px;
+      color: var(--emerald-dark);
+      margin-bottom: 5px
+    }
+
+    .info-banner p {
+      font-size: 12px;
+      color: var(--ink-soft);
+      line-height: 1.6
+    }
+
+    .info-item {
+      display: flex;
+      gap: 12px;
+      padding: 11px 0;
+      border-bottom: 1px dashed rgba(201, 150, 60, .2)
+    }
+
+    .info-item:last-child {
+      border-bottom: none
+    }
+
+    .info-icon {
+      font-size: 20px;
+      flex-shrink: 0
+    }
+
+    .info-item h3 {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--emerald-dark)
+    }
+
+    .info-item p {
+      font-size: 12px;
+      color: var(--ink-soft);
+      margin-top: 1px;
+      line-height: 1.5
+    }
+
+    .danger-btn {
+      display: block;
+      width: calc(100% - 28px);
+      margin: 14px;
+      padding: 11px;
+      background: var(--red-soft);
+      color: var(--red);
+      border: 1.5px solid rgba(192, 57, 43, .3);
+      border-radius: 12px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .2s
+    }
+
+    .danger-btn:hover {
+      background: rgba(192, 57, 43, .2)
+    }
+
+    /* scrollbar */
+    ::-webkit-scrollbar {
+      width: 4px
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(201, 150, 60, .3);
+      border-radius: 2px
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ══ SCREEN: AUTH ══════════════════════════════════════════ -->
+  <div id="screen-auth" class="screen">
+    <div class="auth-box">
+      <div class="auth-brand">
+        <div class="arabic">بسم الله الرحمن الرحيم</div>
+        <h1>📖 Buku Amaliah Ramadhan</h1>
+        <p>Catatan ibadah harian selama Ramadhan</p>
+      </div>
+      <div class="auth-tabs">
+        <button class="auth-tab active" onclick="switchAuthTab('login')">Masuk</button>
+        <button class="auth-tab" onclick="switchAuthTab('register')">Daftar</button>
+      </div>
+
+      <!-- LOGIN -->
+      <div id="form-login" class="auth-form active">
+        <div id="login-error" class="auth-error"></div>
+        <div class="field"><label>Username</label><input id="l-username" type="text" placeholder="Masukkan username"
+            autocomplete="username" /></div>
+        <div class="field"><label>Password</label><input id="l-password" type="password" placeholder="Masukkan password"
+            autocomplete="current-password" /></div>
+        <button class="btn-primary btn-gold" id="btn-login" onclick="doLogin()">Masuk</button>
+      </div>
+
+      <!-- REGISTER -->
+      <div id="form-register" class="auth-form">
+        <div id="reg-error" class="auth-error"></div>
+        <div id="reg-success" class="auth-success"></div>
+        <div class="field"><label>Nama Lengkap</label><input id="r-name" type="text"
+            placeholder="Nama sesuai data sekolah" /></div>
+        <div class="field"><label>Username</label><input id="r-username" type="text" placeholder="Buat username unik" />
+        </div>
+        <div class="field"><label>Password</label><input id="r-password" type="password"
+            placeholder="Min. 6 karakter" /></div>
+        <div class="field">
+          <label>Daftar sebagai</label>
+          <select id="r-role" onchange="onRoleChange()">
+            <option value="">-- Pilih role --</option>
+            <option value="wali_kelas">Wali Kelas</option>
+            <option value="siswa">Siswa</option>
+          </select>
+        </div>
+        <div class="field hidden" id="field-kelas">
+          <label>Kelas</label>
+          <input id="r-kelas" type="text" placeholder="Contoh: 7A, 8B, 9C" />
+        </div>
+        <button class="btn-primary" id="btn-register" onclick="doRegister()">Daftar Sekarang</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SCREEN: PENDING ══════════════════════════════════════ -->
+  <div id="screen-pending" class="screen">
+    <div class="pending-box">
+      <div id="pending-icon" class="icon">⏳</div>
+      <h2 id="pending-title">Menunggu Verifikasi</h2>
+      <div id="pending-badge" class="pending-badge">Status: Pending</div>
+      <p id="pending-desc">Akun Anda sedang menunggu verifikasi. Silakan hubungi yang berwenang.</p>
+      <div id="rejected-detail" class="rejected-box" style="display:none"></div>
+      <button class="btn-primary btn-danger" onclick="doLogout()">Keluar</button>
+    </div>
+  </div>
+
+  <!-- ══ SCREEN: GANTI PASSWORD ══════════════════════════════ -->
+  <div id="screen-changepw" class="screen">
+    <div class="auth-box">
+      <div class="auth-brand">
+        <div style="font-size:40px;margin-bottom:8px">🔑</div>
+        <h1>Ganti Password</h1>
+        <p id="changepw-desc">Demi keamanan, Anda diwajibkan mengganti password sebelum melanjutkan.</p>
+      </div>
+      <div id="cpw-error" class="auth-error"></div>
+      <div class="field"><label>Password Lama</label><input id="cpw-old" type="password"
+          placeholder="Password saat ini" /></div>
+      <div class="field"><label>Password Baru</label><input id="cpw-new" type="password"
+          placeholder="Min. 6 karakter" /></div>
+      <div class="field"><label>Konfirmasi Password Baru</label><input id="cpw-confirm" type="password"
+          placeholder="Ulangi password baru" /></div>
+      <button class="btn-primary btn-gold" id="btn-changepw" onclick="doChangePassword()">Simpan Password Baru</button>
+    </div>
+  </div>
+
+  <!-- ══ SCREEN: APP UTAMA ══════════════════════════════════ -->
+  <div id="screen-app" class="screen">
+    <div id="shell">
+      <!-- App Header -->
+      <div class="app-header">
+        <div class="header-row">
+          <div class="header-brand">
+            <div class="arabic">📖 Amaliah Ramadhan</div>
+            <h1 id="header-title">Buku Amaliah</h1>
+          </div>
+          <div class="header-user">
+            <div class="uname" id="header-uname">—</div>
+            <div class="urole" id="header-urole">—</div>
+            <div style="display:flex;gap:6px;margin-top:4px;">
+              <button onclick="logger.toggle()" style="padding:4px 8px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:6px;color:#fff;cursor:pointer;font-size:10px;font-weight:700;" title="Toggle Debug Console">🔍 Debug</button>
+              <button class="logout-btn" onclick="doLogout()">Keluar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Nav (rendered dynamically per role) -->
+      <nav class="app-nav" id="app-nav"></nav>
+
+      <!-- Pages (rendered dynamically per role) -->
+      <div id="app-pages"></div>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+
+  <!-- DEBUG PANEL -->
+  <div id="debug-panel" style="display:none;position:fixed;bottom:0;left:0;right:0;height:200px;background:#faf7f0;border-top:3px solid #c9963c;z-index:99999;overflow:hidden;box-shadow:0 -4px 20px rgba(0,0,0,0.2);">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 16px;background:#1a5c45;color:#fff;font-size:12px;font-weight:700;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span>🔍 DEBUG CONSOLE</span>
+        <span style="background:rgba(255,255,255,0.2);padding:2px 8px;border-radius:10px;font-size:10px;"><span id="debug-count">0</span> logs</span>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button onclick="logger.clear()" style="padding:4px 12px;background:rgba(255,255,255,0.2);border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:11px;font-weight:700;">Clear</button>
+        <button onclick="logger.toggle()" style="padding:4px 12px;background:#c0392b;border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:11px;font-weight:700;">Close</button>
+      </div>
+    </div>
+    <div id="debug-content" style="overflow-y:auto;max-height:160px;"></div>
+  </div>
+
+  <script>
+    // ════════════════════════════════════════════════
+    // CONFIG
+    // ════════════════════════════════════════════════
+    const API = 'http://localhost:3002/api';
+    const DEBUG = true;
+
+    // ════════════════════════════════════════════════
+    // LOGGER / DEBUGGER
+    // ════════════════════════════════════════════════
+    const logger = {
+      logs: [],
+      maxLogs: 100,
+      add(type, message, data = null) {
+        const entry = {
+          time: new Date().toLocaleTimeString(),
+          type,
+          message,
+          data
+        };
+        this.logs.unshift(entry);
+        if (this.logs.length > this.maxLogs) this.logs.pop();
+        this.render();
+        console.log(`[${type}] ${message}`, data || '');
+      },
+      info(msg, data) { this.add('INFO', msg, data); },
+      warn(msg, data) { this.add('WARN', msg, data); },
+      error(msg, data) { this.add('ERROR', msg, data); },
+      success(msg, data) { this.add('SUCCESS', msg, data); },
+      request(method, path, data) { this.add('REQUEST', `${method} ${path}`, data); },
+      response(method, path, status, data) { this.add('RESPONSE', `${method} ${path} → ${status}`, data); },
+      render() {
+        const panel = document.getElementById('debug-panel');
+        if (!panel) return;
+        const content = document.getElementById('debug-content');
+        if (!content) return;
+        content.innerHTML = this.logs.map(log => {
+          const colors = { INFO: '#1a5c45', SUCCESS: '#2a7a5c', WARN: '#c9963c', ERROR: '#c0392b', REQUEST: '#c9963c', RESPONSE: '#5a4e3a' };
+          return `<div style="font-size:11px;padding:4px 8px;border-bottom:1px solid rgba(0,0,0,0.05);font-family:monospace;">
+            <span style="color:${colors[log.type]||'#666'};font-weight:700;min-width:70px;display:inline-block;">[${log.time}] ${log.type}</span>
+            <span style="color:#333">${log.message}</span>
+            ${log.data ? `<pre style="margin:4px 0 0 0;padding:4px;background:rgba(0,0,0,0.05);border-radius:4px;overflow-x:auto;font-size:10px;color:#666">${JSON.stringify(log.data, null, 2)}</pre>` : ''}
+          </div>`;
+        }).join('');
+        document.getElementById('debug-count').textContent = this.logs.length;
+      },
+      toggle() {
+        const panel = document.getElementById('debug-panel');
+        if (!panel) return;
+        panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+      },
+      clear() {
+        this.logs = [];
+        this.render();
+      }
+    };
+
+    // ════════════════════════════════════════════════
+    // STATE
+    // ════════════════════════════════════════════════
+    let token = localStorage.getItem('rm_token') || null;
+    let currentUser = null;
+    let currentDay = 1;
+    let localData = {};
+    let pendingSaveDay = null;
+
+    logger.info('App initialized', { API, hasToken: !!token });
+
+    // ════════════════════════════════════════════════
+    // API HELPERS (with logging)
+    // ════════════════════════════════════════════════
+    async function api(method, path, body) {
+      logger.request(method, path, body);
+      const headers = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = 'Bearer ' + token;
+      try {
+        const res = await fetch(API + path, {
+          method,
+          headers,
+          body: body ? JSON.stringify(body) : undefined,
+        });
+        const json = await res.json().catch(() => ({}));
+        logger.response(method, path, res.status, json);
+        return { ok: res.ok, status: res.status, data: json };
+      } catch (err) {
+        logger.error(`Fetch failed: ${method} ${path}`, err.message);
+        return { ok: false, status: 0, data: { error: err.message } };
+      }
+    }
+
+    // ════════════════════════════════════════════════
+    // SCREEN ROUTER
+    // ════════════════════════════════════════════════
+    function showScreen(id) {
+      logger.info('Changing screen', { from: document.querySelector('.screen.active')?.id, to: 'screen-' + id });
+      
+      // Hide ALL screens first
+      document.querySelectorAll('.screen').forEach(s => {
+        s.classList.remove('active');
+        s.style.display = ''; // Clear inline style, let CSS handle it
+        // Hide all child forms and boxes
+        const forms = s.querySelectorAll('.auth-form, .pending-box');
+        forms.forEach(f => f.style.display = 'none');
+      });
+      
+      // Show only the target screen
+      const target = document.getElementById('screen-' + id);
+      if (target) {
+        target.classList.add('active');
+        // Don't set inline style - let CSS handle display based on .active class
+        
+        // If it's auth screen, show the active form
+        if (id === 'auth') {
+          const activeForm = target.querySelector('.auth-form.active');
+          if (activeForm) {
+            activeForm.style.display = 'block';
+          } else {
+            // Default to login form
+            const loginForm = target.querySelector('#form-login');
+            if (loginForm) {
+              loginForm.classList.add('active');
+              loginForm.style.display = 'block';
+            }
+          }
+        } else if (id === 'pending') {
+          const pendingBox = target.querySelector('.pending-box');
+          if (pendingBox) pendingBox.style.display = 'block';
+        }
+        
+        logger.success('Screen changed', { screen: id });
+      } else {
+        logger.error('Screen not found', { screenId: id });
+      }
+    }
+
+    // ════════════════════════════════════════════════
+    // TOAST
+    // ════════════════════════════════════════════════
+    function toast(msg, dur = 2400) {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.add('show');
+      setTimeout(() => el.classList.remove('show'), dur);
+    }
+
+    // ════════════════════════════════════════════════
+    // AUTH: SWITCH TAB
+    // ════════════════════════════════════════════════
+    function switchAuthTab(tab) {
+      // Update tab buttons
+      document.querySelectorAll('.auth-tab').forEach((b, i) => b.classList.toggle('active', ['login', 'register'][i] === tab));
+      
+      // Hide all forms
+      document.getElementById('form-login').classList.remove('active');
+      document.getElementById('form-register').classList.remove('active');
+      document.getElementById('form-login').style.display = 'none';
+      document.getElementById('form-register').style.display = 'none';
+      
+      // Show selected form
+      const selectedForm = document.getElementById('form-' + tab);
+      if (selectedForm) {
+        selectedForm.classList.add('active');
+        selectedForm.style.display = 'block';
+      }
+      
+      // Clear errors
+      document.getElementById('login-error').classList.remove('show');
+      document.getElementById('reg-error').classList.remove('show');
+      document.getElementById('reg-success').classList.remove('show');
+      
+      logger.info('Auth tab switched', { tab });
+    }
+
+    function onRoleChange() {
+      const role = document.getElementById('r-role').value;
+      document.getElementById('field-kelas').classList.toggle('hidden', !role || role === 'admin');
+    }
+
+    // ════════════════════════════════════════════════
+    // AUTH: LOGIN
+    // ════════════════════════════════════════════════
+    async function doLogin() {
+      const btn = document.getElementById('btn-login');
+      const errEl = document.getElementById('login-error');
+      errEl.classList.remove('show');
+
+      const username = document.getElementById('l-username').value.trim();
+      const password = document.getElementById('l-password').value;
+      
+      logger.info('Login attempt', { username });
+      
+      if (!username || !password) {
+        logger.error('Login validation failed', { hasUsername: !!username, hasPassword: !!password });
+        showErr(errEl, 'Username dan password wajib diisi');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span>Masuk...';
+      logger.info('Sending login request...');
+      const { ok, data } = await api('POST', '/auth/login', { username, password });
+      btn.disabled = false;
+      btn.innerHTML = 'Masuk';
+
+      if (!ok) {
+        logger.error('Login failed', data.error);
+        showErr(errEl, data.error || 'Login gagal');
+        return;
+      }
+
+      logger.success('Login successful', { user: data.user?.username, role: data.user?.role });
+      token = data.token;
+      localStorage.setItem('rm_token', token);
+      currentUser = data.user;
+      routeAfterLogin();
+    }
+
+    // ════════════════════════════════════════════════
+    // AUTH: REGISTER
+    // ════════════════════════════════════════════════
+    async function doRegister() {
+      const btn = document.getElementById('btn-register');
+      const errEl = document.getElementById('reg-error');
+      const sucEl = document.getElementById('reg-success');
+      errEl.classList.remove('show');
+      sucEl.classList.remove('show');
+
+      const body = {
+        name: document.getElementById('r-name').value.trim(),
+        username: document.getElementById('r-username').value.trim(),
+        password: document.getElementById('r-password').value,
+        role: document.getElementById('r-role').value,
+        kelas: document.getElementById('r-kelas').value.trim() || undefined,
+      };
+      if (!body.name || !body.username || !body.password || !body.role) {
+        showErr(errEl, 'Semua field wajib diisi'); return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span>Mendaftar...';
+      const { ok, data } = await api('POST', '/auth/register', body);
+      btn.disabled = false;
+      btn.innerHTML = 'Daftar Sekarang';
+
+      if (!ok) { showErr(errEl, data.error || 'Registrasi gagal'); return; }
+      sucEl.textContent = '✅ ' + data.message;
+      sucEl.classList.add('show');
+      // clear form
+      ['r-name', 'r-username', 'r-password', 'r-kelas'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('r-role').value = '';
+      document.getElementById('field-kelas').classList.add('hidden');
+    }
+
+    function showErr(el, msg) { el.textContent = msg; el.classList.add('show'); }
+
+    // ════════════════════════════════════════════════
+    // AUTH: CHANGE PASSWORD
+    // ════════════════════════════════════════════════
+    async function doChangePassword() {
+      const btn = document.getElementById('btn-changepw');
+      const errEl = document.getElementById('cpw-error');
+      errEl.classList.remove('show');
+
+      const old_password = document.getElementById('cpw-old').value;
+      const new_password = document.getElementById('cpw-new').value;
+      const confirm = document.getElementById('cpw-confirm').value;
+
+      if (!old_password || !new_password || !confirm) { showErr(errEl, 'Semua field wajib diisi'); return; }
+      if (new_password !== confirm) { showErr(errEl, 'Konfirmasi password tidak cocok'); return; }
+      if (new_password.length < 6) { showErr(errEl, 'Password baru minimal 6 karakter'); return; }
+
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span>Menyimpan...';
+      const { ok, data } = await api('POST', '/auth/change-password', { old_password, new_password });
+      btn.disabled = false;
+      btn.innerHTML = 'Simpan Password Baru';
+
+      if (!ok) { showErr(errEl, data.error || 'Gagal mengganti password'); return; }
+      toast('✅ Password berhasil diubah!');
+      currentUser.must_change_password = false;
+      routeAfterLogin();
+    }
+
+    // ════════════════════════════════════════════════
+    // LOGOUT
+    // ════════════════════════════════════════════════
+    function doLogout() {
+      logger.info('User logged out', { user: currentUser?.username });
+      token = null;
+      currentUser = null;
+      localData = {};
+      localStorage.removeItem('rm_token');
+      
+      // Force hide ALL screens
+      document.querySelectorAll('.screen').forEach(s => {
+        s.classList.remove('active');
+        s.style.display = ''; // Clear inline style
+        const forms = s.querySelectorAll('.auth-form, .pending-box');
+        forms.forEach(f => f.style.display = 'none');
+      });
+      
+      // Show only auth screen with login form (CSS will center it)
+      const authScreen = document.getElementById('screen-auth');
+      if (authScreen) {
+        authScreen.classList.add('active');
+        // Don't set inline style - CSS handles flex centering
+      }
+      
+      // Reset to login form
+      const loginForm = document.getElementById('form-login');
+      const registerForm = document.getElementById('form-register');
+      
+      if (loginForm) {
+        loginForm.classList.add('active');
+        loginForm.style.display = 'block';
+      }
+      if (registerForm) {
+        registerForm.classList.remove('active');
+        registerForm.style.display = 'none';
+      }
+      
+      // Reset tab buttons
+      const tabs = document.querySelectorAll('.auth-tab');
+      if (tabs[0]) tabs[0].classList.add('active');
+      if (tabs[1]) tabs[1].classList.remove('active');
+      
+      // Clear input fields
+      document.getElementById('l-username').value = '';
+      document.getElementById('l-password').value = '';
+      document.getElementById('r-name').value = '';
+      document.getElementById('r-username').value = '';
+      document.getElementById('r-password').value = '';
+      document.getElementById('r-kelas').value = '';
+      document.getElementById('r-role').value = '';
+      
+      // Clear errors
+      document.getElementById('login-error').classList.remove('show');
+      document.getElementById('reg-error').classList.remove('show');
+      document.getElementById('reg-success').classList.remove('show');
+      
+      logger.success('Logout complete, showing auth screen');
+    }
+
+    // ════════════════════════════════════════════════
+    // ROUTING
+    // ════════════════════════════════════════════════
+    function routeAfterLogin() {
+      if (!currentUser) {
+        logger.error('No currentUser after login');
+        showScreen('auth');
+        return;
+      }
+
+      logger.info('Routing after login', { user: currentUser.username, role: currentUser.role, verified: currentUser.verified, mustChangePassword: currentUser.must_change_password });
+
+      // Must change password
+      if (currentUser.must_change_password) {
+        logger.info('User must change password');
+        const isAdmin = currentUser.role === 'admin';
+        document.getElementById('changepw-desc').textContent = isAdmin
+          ? 'Ini adalah login pertama admin. Wajib ganti password default sebelum melanjutkan.'
+          : 'Demi keamanan, Anda diwajibkan mengganti password sebelum melanjutkan.';
+        showScreen('changepw');
+        return;
+      }
+
+      // Pending / rejected (non-admin)
+      if (currentUser.role !== 'admin' && currentUser.verified !== 1) {
+        const rejected = currentUser.verified === 2;
+        logger.warn('User pending/rejected', { rejected, role: currentUser.role });
+        document.getElementById('pending-icon').textContent = rejected ? '❌' : '⏳';
+        document.getElementById('pending-title').textContent = rejected ? 'Akun Ditolak' : 'Menunggu Verifikasi';
+        document.getElementById('pending-badge').textContent = rejected ? 'Status: Ditolak' : 'Status: Pending';
+        document.getElementById('pending-badge').className = 'pending-badge ' + (rejected ? 'badge-rejected' : 'badge-pending');
+        const verBy = currentUser.role === 'wali_kelas' ? 'Admin sekolah' : 'Wali Kelas';
+        document.getElementById('pending-desc').textContent = rejected
+          ? 'Akun Anda tidak disetujui. Hubungi ' + verBy + ' untuk informasi lebih lanjut.'
+          : `Akun Anda sedang menunggu verifikasi oleh ${verBy}. Coba cek kembali nanti.`;
+        const rejBox = document.getElementById('rejected-detail');
+        if (rejected && currentUser.rejected_reason) {
+          rejBox.style.display = 'block';
+          rejBox.textContent = 'Alasan: ' + currentUser.rejected_reason;
+        } else {
+          rejBox.style.display = 'none';
+        }
+        showScreen('pending');
+        return;
+      }
+
+      logger.info('User verified, rendering app');
+      // Render app
+      renderApp();
+    }
+
+    // ════════════════════════════════════════════════
+    // APP RENDER (per role)
+    // ════════════════════════════════════════════════
+    const ROLE_LABELS = { admin: 'Administrator', wali_kelas: 'Wali Kelas', siswa: 'Siswa' };
+
+    function renderApp() {
+      document.getElementById('header-uname').textContent = currentUser.name;
+      document.getElementById('header-urole').textContent = ROLE_LABELS[currentUser.role] + (currentUser.kelas ? ' — ' + currentUser.kelas : '');
+      document.getElementById('header-title').textContent =
+        currentUser.role === 'admin' ? 'Panel Admin' :
+          currentUser.role === 'wali_kelas' ? 'Panel Wali Kelas' : 'Buku Amaliah';
+
+      showScreen('app');
+
+      if (currentUser.role === 'siswa') renderSiswa();
+      else if (currentUser.role === 'wali_kelas') renderWali();
+      else renderAdmin();
+    }
+
+    // ════════════════════════════════════════════════
+    // ████ ROLE: SISWA ████████████████████████████
+    // ════════════════════════════════════════════════
+    const IBADAH = {
+      sholat: [
+        { id: 'subuh', label: 'Sholat Subuh (Berjamaah)', pts: 3 }, { id: 'dzuhur', label: 'Sholat Dzuhur', pts: 2 },
+        { id: 'ashar', label: 'Sholat Ashar', pts: 2 }, { id: 'maghrib', label: 'Sholat Maghrib (Berjamaah)', pts: 3 },
+        { id: 'isya', label: 'Sholat Isya (Berjamaah)', pts: 3 },
+      ],
+      sunnah: [
+        { id: 'sahur', label: 'Makan Sahur', pts: 2 }, { id: 'buka', label: 'Berbuka tepat waktu', pts: 2 },
+        { id: 'tarawih', label: 'Sholat Tarawih', pts: 3 }, { id: 'witir', label: 'Sholat Witir', pts: 2 },
+        { id: 'duha', label: 'Sholat Dhuha', pts: 2 }, { id: 'tahajud', label: 'Sholat Tahajud', pts: 3 },
+        { id: 'rawatib', label: 'Sholat Sunnah Rawatib', pts: 2 },
+      ],
+      tadarus: [
+        { id: 'tadarus', label: "Membaca Al-Qur'an", pts: 3 }, { id: 'hafalan', label: "Menghafal/Muraja'ah", pts: 3 },
+        { id: 'dzikir', label: 'Dzikir Pagi & Petang', pts: 2 },
+      ],
+      akhlak: [
+        { id: 'infaq', label: 'Infaq / Sedekah', pts: 3 }, { id: 'puasa', label: 'Puasa Penuh (tdk batal)', pts: 5 },
+        { id: 'menahan', label: 'Menjaga Lisan & Perilaku', pts: 3 }, { id: 'tilawatquran', label: 'Menyimak kajian/ceramah', pts: 2 },
+        { id: 'berbakti', label: 'Berbakti kepada Orang Tua', pts: 2 },
+      ],
+    };
+    const MAX_PTS = Object.values(IBADAH).flat().reduce((s, i) => s + i.pts, 0);
+
+    function renderSiswa() {
+      const nav = document.getElementById('app-nav');
+      nav.innerHTML = `
+    <button class="active" onclick="siswaPage('catat')">✏️ Catat</button>
+    <button onclick="siswaPage('rekap')">📊 Rekap</button>
+    <button onclick="siswaPage('profil')">👤 Profil</button>`;
+
+      const pages = document.getElementById('app-pages');
+      pages.innerHTML = `
+    <!-- CATAT -->
+    <div id="page-catat" class="page active">
+      <div class="day-selector-wrap">
+        <div class="day-selector-label">Pilih Hari Ramadhan</div>
+        <div class="day-grid" id="dayGrid"></div>
+      </div>
+      <div class="card"><div class="card-title">🕌 Sholat Fardhu</div><div class="checklist" id="list-sholat"></div></div>
+      <div class="card"><div class="card-title">🌙 Ibadah Sunnah</div><div class="checklist" id="list-sunnah"></div></div>
+      <div class="card">
+        <div class="card-title">📖 Tadarus Al-Qur'an</div>
+        <div class="checklist" id="list-tadarus"></div>
+        <div class="quran-input-wrap"><label>Halaman dibaca hari ini</label><input type="number" id="quranPages" min="0" max="604" placeholder="0"/><span>hal.</span></div>
+      </div>
+      <div class="card"><div class="card-title">❤️ Akhlak &amp; Sosial</div><div class="checklist" id="list-akhlak"></div></div>
+      <div class="card"><div class="card-title">📝 Catatan Harian</div><textarea class="note-area" id="catatanHarian" placeholder="Tulis refleksi atau doa hari ini..."></textarea></div>
+      
+      <!-- PARENT VERIFICATION SECTION -->
+      <div class="card parent-verify-section" id="parentVerifySection">
+        <div class="parent-verify-header">
+          <div class="parent-verify-title">
+            <span>👨‍👩‍👧</span>
+            <span>Verifikasi Orang Tua/Wali</span>
+          </div>
+          <span class="verify-badge pending" id="verifyBadge">⏳ Belum Verifikasi</span>
+        </div>
+        <div style="font-size:11px;color:var(--ink-soft);margin-bottom:10px;">
+          Setelah menyimpan kegiatan, orang tua/wali perlu memverifikasi dengan tanda tangan di bawah.
+        </div>
+
+        <div class="field">
+          <label>Nama Orang Tua/Wali</label>
+          <input id="parentName" type="text" placeholder="Nama lengkap orang tua/wali" />
+        </div>
+
+        <!-- Signature Canvas -->
+        <div id="signatureSection">
+          <label style="font-size:12px;font-weight:700;color:var(--ink-soft);display:block;margin-bottom:6px;">Tanda Tangan</label>
+          <canvas id="signatureCanvas" class="signature-canvas"></canvas>
+          <div class="signature-actions">
+            <button class="btn-signature" onclick="clearSignature()">🗑️ Hapus TTD</button>
+          </div>
+        </div>
+      </div>
+      
+      <button class="save-btn" id="btnSave" onclick="saveDay()">💾 Simpan Hari Ini</button>
+      <div style="height:14px"></div>
+    </div>
+    <!-- REKAP -->
+    <div id="page-rekap-siswa" class="page">
+      <div class="rekap-header">
+        <h2>📊 Rekap Ramadhanku</h2>
+        <p id="rekap-kelas-info"></p>
+        <div class="ring-outer">
+          <svg width="110" height="110" viewBox="0 0 110 110"><circle class="ring-bg" cx="55" cy="55" r="48"/><circle class="ring-fg" id="ringFg" cx="55" cy="55" r="48" stroke-dasharray="301.6" stroke-dashoffset="301.6"/></svg>
+          <div class="ring-center"><div class="ring-pct" id="ringPct">0%</div><div class="ring-lbl">ibadah</div></div>
+        </div>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-val" id="statHari">0</div><div class="stat-key">Hari Tercatat</div></div>
+        <div class="stat-card"><div class="stat-val" id="statQuran">0</div><div class="stat-key">Hal. Quran</div></div>
+        <div class="stat-card"><div class="stat-val" id="statChecks">0</div><div class="stat-key">Ibadah Selesai</div></div>
+        <div class="stat-card"><div class="stat-val" id="statBest">—</div><div class="stat-key">Hari Terbaik</div></div>
+      </div>
+      <div class="card" style="margin-top:12px">
+        <div class="card-title">📅 Riwayat Per Hari</div>
+        <div id="dayRekapList"><div class="loading-screen"><span class="spinner"></span>Memuat...</div></div>
+      </div>
+    </div>
+    <!-- PROFIL -->
+    <div id="page-profil" class="page">
+      <div class="info-banner">
+        <h2>مَرْحَبًا يَا رَمَضَان</h2>
+        <p>Semoga amal ibadahmu diterima Allah SWT.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">👤 Profil Saya</div>
+        <div class="info-item"><div class="info-icon">👤</div><div><h3>Nama</h3><p id="profil-name">—</p></div></div>
+        <div class="info-item"><div class="info-icon">🏫</div><div><h3>Kelas</h3><p id="profil-kelas">—</p></div></div>
+        <div class="info-item"><div class="info-icon">🔑</div><div><h3>Username</h3><p id="profil-username">—</p></div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">🔐 Ganti Password</div>
+        <div id="profil-cpw-err" class="auth-error"></div>
+        <div class="field"><label>Password Lama</label><input id="p-old" type="password" placeholder="Password saat ini"/></div>
+        <div class="field"><label>Password Baru</label><input id="p-new" type="password" placeholder="Min. 6 karakter"/></div>
+        <div class="field"><label>Konfirmasi</label><input id="p-confirm" type="password" placeholder="Ulangi password baru"/></div>
+        <button class="btn-primary" style="margin-top:4px" onclick="profilChangePassword()">Ganti Password</button>
+      </div>
+    </div>`;
+
+      // init profil
+      document.getElementById('profil-name').textContent = currentUser.name;
+      document.getElementById('profil-kelas').textContent = currentUser.kelas || '—';
+      document.getElementById('profil-username').textContent = currentUser.username;
+
+      loadAllAmaliah();
+      initSignatureCanvas();
+    }
+
+    // ════════════════════════════════════════════════
+    // SIGNATURE CANVAS
+    // ════════════════════════════════════════════════
+    let signatureCanvas = null;
+    let signatureCtx = null;
+    let isDrawing = false;
+    let useCheckboxMode = false;
+
+    function initSignatureCanvas() {
+      const canvas = document.getElementById('signatureCanvas');
+      if (!canvas) return;
+      
+      // Set canvas size
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width || 300;
+      canvas.height = rect.height || 120;
+      
+      signatureCanvas = canvas;
+      signatureCtx = canvas.getContext('2d');
+      
+      // Setup drawing
+      signatureCtx.strokeStyle = '#1a5c45';
+      signatureCtx.lineWidth = 2;
+      signatureCtx.lineCap = 'round';
+      signatureCtx.lineJoin = 'round';
+      
+      // Mouse events
+      canvas.addEventListener('mousedown', startDrawing);
+      canvas.addEventListener('mousemove', draw);
+      canvas.addEventListener('mouseup', stopDrawing);
+      canvas.addEventListener('mouseout', stopDrawing);
+      
+      // Touch events
+      canvas.addEventListener('touchstart', handleTouchStart);
+      canvas.addEventListener('touchmove', handleTouchMove);
+      canvas.addEventListener('touchend', stopDrawing);
+      
+      logger.info('Signature canvas initialized');
+    }
+
+    function startDrawing(e) {
+      isDrawing = true;
+      signatureCtx.beginPath();
+      signatureCtx.moveTo(e.offsetX, e.offsetY);
+    }
+
+    function draw(e) {
+      if (!isDrawing) return;
+      signatureCtx.lineTo(e.offsetX, e.offsetY);
+      signatureCtx.stroke();
+    }
+
+    function stopDrawing() {
+      isDrawing = false;
+    }
+
+    function handleTouchStart(e) {
+      e.preventDefault();
+      const touch = e.touches[0];
+      const rect = signatureCanvas.getBoundingClientRect();
+      isDrawing = true;
+      signatureCtx.beginPath();
+      signatureCtx.moveTo(touch.clientX - rect.left, touch.clientY - rect.top);
+    }
+
+    function handleTouchMove(e) {
+      e.preventDefault();
+      if (!isDrawing) return;
+      const touch = e.touches[0];
+      const rect = signatureCanvas.getBoundingClientRect();
+      signatureCtx.lineTo(touch.clientX - rect.left, touch.clientY - rect.top);
+      signatureCtx.stroke();
+    }
+
+    function clearSignature() {
+      if (signatureCtx) {
+        signatureCtx.clearRect(0, 0, signatureCanvas.width, signatureCanvas.height);
+      }
+      logger.info('Signature cleared');
+    }
+
+    function getSignatureData() {
+      if (!signatureCanvas || !signatureCtx) return null;
+      try {
+        return signatureCanvas.toDataURL('image/png');
+      } catch (e) {
+        logger.error('Error getting signature data', e.message);
+        return null;
+      }
+    }
+
+    // ════════════════════════════════════════════════
+    // PARENT SIGNATURE ONLY (Photo removed)
+    // ════════════════════════════════════════════════
+    function updateParentVerifyUI(dayData) {
+      const section = document.getElementById('parentVerifySection');
+      const badge = document.getElementById('verifyBadge');
+      const parentNameInput = document.getElementById('parentName');
+
+      if (!section || !badge) return;
+
+      if (dayData && dayData.parent_verified === 1) {
+        section.classList.add('verified');
+        badge.className = 'verify-badge verified';
+        badge.innerHTML = '✅ Terverifikasi';
+
+        if (parentNameInput) {
+          parentNameInput.value = dayData.parent_name || '';
+          parentNameInput.disabled = true;
+        }
+
+        // Hide signature section
+        const sigSection = document.getElementById('signatureSection');
+        if (sigSection) sigSection.style.display = 'none';
+
+        // Remove old verified info if exists
+        const existingInfo = document.getElementById('verifiedInfo');
+        if (existingInfo) existingInfo.remove();
+
+        // Add verified info with new styling
+        const verifiedInfo = document.createElement('div');
+        verifiedInfo.id = 'verifiedInfo';
+        verifiedInfo.className = 'verified-info';
+        
+        const formattedDate = dayData.parent_verified_at 
+          ? new Date(dayData.parent_verified_at).toLocaleString('id-ID', { 
+              day: 'numeric', 
+              month: 'short', 
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit'
+            })
+          : 'N/A';
+
+        verifiedInfo.innerHTML = `
+          <div class="verified-info-row">
+            <span class="verified-info-label">Nama:</span>
+            <span class="verified-info-value">${dayData.parent_name || 'N/A'}</span>
+          </div>
+          <div class="verified-info-row">
+            <span class="verified-info-label">Tanggal:</span>
+            <span class="verified-info-value">${formattedDate}</span>
+          </div>
+        `;
+        section.appendChild(verifiedInfo);
+
+        logger.info('Parent verification UI updated - verified');
+      } else {
+        section.classList.remove('verified');
+        badge.className = 'verify-badge pending';
+        badge.innerHTML = '⏳ Belum Verifikasi';
+
+        if (parentNameInput) {
+          parentNameInput.value = '';
+          parentNameInput.disabled = false;
+        }
+
+        // Show signature section
+        const sigSection = document.getElementById('signatureSection');
+        if (sigSection) sigSection.style.display = 'block';
+
+        // Remove verified info if exists
+        const existingInfo = document.getElementById('verifiedInfo');
+        if (existingInfo) existingInfo.remove();
+
+        logger.info('Parent verification UI updated - pending');
+      }
+    }
+
+    async function loadAllAmaliah() {
+      const { ok, data } = await api('GET', '/amaliah');
+      if (ok) {
+        // data.data = {1:{checks,pages,catatan}, ...}
+        localData = {};
+        for (const [h, v] of Object.entries(data.data)) {
+          localData[Number(h)] = v;
+        }
+      }
+      buildDayGrid();
+      selectDay(1);
+    }
+
+    function siswaPage(name) {
+      document.querySelectorAll('#app-pages .page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('#app-nav button').forEach((b, i) => b.classList.toggle('active', ['catat', 'rekap', 'profil'][i] === name));
+      const map = { catat: 'page-catat', rekap: 'page-rekap-siswa', profil: 'page-profil' };
+      document.getElementById(map[name]).classList.add('active');
+      if (name === 'rekap') buildSiswaRekap();
+    }
+
+    function buildDayGrid() {
+      const el = document.getElementById('dayGrid');
+      if (!el) return;
+      el.innerHTML = '';
+      for (let d = 1; d <= 30; d++) {
+        const btn = document.createElement('button');
+        btn.className = 'day-btn' + (d === currentDay ? ' selected' : '') + (localData[d] ? ' has-data' : '');
+        btn.textContent = d;
+        btn.onclick = () => selectDay(d);
+        el.appendChild(btn);
+      }
+    }
+
+    function selectDay(d) {
+      currentDay = d;
+      buildDayGrid();
+      const dd = localData[d] || { checks: {}, pages: 0, catatan: '' };
+      buildChecklist('list-sholat', IBADAH.sholat, dd.checks);
+      buildChecklist('list-sunnah', IBADAH.sunnah, dd.checks);
+      buildChecklist('list-tadarus', IBADAH.tadarus, dd.checks);
+      buildChecklist('list-akhlak', IBADAH.akhlak, dd.checks);
+      const qp = document.getElementById('quranPages');
+      const ch = document.getElementById('catatanHarian');
+      if (qp) qp.value = dd.pages || '';
+      if (ch) ch.value = dd.catatan || '';
+      
+      // Update parent verification UI
+      updateParentVerifyUI(dd);
+    }
+
+    function buildChecklist(listId, items, checks) {
+      const el = document.getElementById(listId);
+      if (!el) return;
+      el.innerHTML = '';
+      items.forEach(item => {
+        const checked = !!checks[item.id];
+        const div = document.createElement('div');
+        div.className = 'check-item' + (checked ? ' checked' : '');
+        div.innerHTML = `<div class="check-box">${checked ? '✓' : ''}</div><div class="check-label">${item.label}</div><div class="check-pts">+${item.pts}</div>`;
+        div.onclick = () => {
+          if (!localData[currentDay]) localData[currentDay] = { checks: {}, pages: 0, catatan: '' };
+          localData[currentDay].checks[item.id] = !localData[currentDay].checks[item.id];
+          div.classList.toggle('checked');
+          div.querySelector('.check-box').textContent = localData[currentDay].checks[item.id] ? '✓' : '';
+        };
+        el.appendChild(div);
+      });
+    }
+
+    async function saveDay() {
+      const btn = document.getElementById('btnSave');
+      if (!localData[currentDay]) localData[currentDay] = { checks: {}, pages: 0, catatan: '' };
+      localData[currentDay].pages = parseInt(document.getElementById('quranPages').value) || 0;
+      localData[currentDay].catatan = document.getElementById('catatanHarian').value;
+
+      // Get parent verification data
+      const parentName = document.getElementById('parentName')?.value || '';
+      const signatureData = getSignatureData();
+
+      // Check if parent verification is provided (name + signature required)
+      if (parentName && signatureData) {
+        localData[currentDay].parent_verified = 1;
+        localData[currentDay].parent_name = parentName;
+        localData[currentDay].parent_signature = signatureData;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span>Menyimpan...';
+      const { ok, data } = await api('PUT', `/amaliah/${currentDay}`, localData[currentDay]);
+      btn.disabled = false;
+      btn.innerHTML = '💾 Simpan Hari Ini';
+
+      if (!ok) {
+        const errorMsg = typeof data.error === 'string' ? data.error : 'Gagal menyimpan';
+        toast('❌ ' + errorMsg);
+        return;
+      }
+
+      buildDayGrid();
+
+      // Update UI with verification status
+      updateParentVerifyUI(localData[currentDay]);
+
+      if (localData[currentDay].parent_verified === 1) {
+        toast('✅ Hari ke-' + currentDay + ' tersimpan & diverifikasi!');
+      } else {
+        toast('✅ Hari ke-' + currentDay + ' tersimpan! ⏳ Perlu verifikasi ortu');
+      }
+    }
+
+    function calcPtsFromData(dd) {
+      if (!dd) return 0;
+      const PTS = {};
+      Object.values(IBADAH).flat().forEach(i => PTS[i.id] = i.pts);
+      return Object.entries(dd.checks || {}).reduce((s, [k, v]) => s + (v ? PTS[k] || 0 : 0), 0);
+    }
+
+    async function buildSiswaRekap() {
+      // use cached localData
+      let totalHari = 0, totalPages = 0, totalChecks = 0, bestDay = null, bestPts = -1;
+      const rows = [];
+      for (let d = 1; d <= 30; d++) {
+        if (localData[d]) {
+          totalHari++;
+          totalPages += (localData[d].pages || 0);
+          const pts = calcPtsFromData(localData[d]);
+          totalChecks += Object.values(localData[d].checks || {}).filter(Boolean).length;
+          if (pts > bestPts) { bestPts = pts; bestDay = d; }
+          rows.push({ d, pts });
+        }
+      }
+      const totalPossible = totalHari * MAX_PTS;
+      const totalPts = rows.reduce((s, r) => s + r.pts, 0);
+      const pct = totalPossible > 0 ? Math.round(totalPts / totalPossible * 100) : 0;
+
+      document.getElementById('ringPct').textContent = pct + '%';
+      document.getElementById('ringFg').style.strokeDashoffset = 301.6 - (pct / 100) * 301.6;
+      document.getElementById('statHari').textContent = totalHari;
+      document.getElementById('statQuran').textContent = totalPages;
+      document.getElementById('statChecks').textContent = totalChecks;
+      document.getElementById('statBest').textContent = bestDay ? 'Hari ' + bestDay : '—';
+      document.getElementById('rekap-kelas-info').textContent = currentUser.name + ' — Kelas ' + (currentUser.kelas || '—');
+
+      const list = document.getElementById('dayRekapList');
+      if (rows.length === 0) {
+        list.innerHTML = '<div class="empty-state"><div class="big">📋</div><p>Belum ada data.<br>Mulai catat ibadah harianmu!</p></div>';
+        return;
+      }
+      list.innerHTML = [...rows].reverse().map(({ d, pts }) => {
+        const pctDay = Math.round(pts / MAX_PTS * 100);
+        const cc = Object.values(localData[d].checks || {}).filter(Boolean).length;
+        return `<div class="day-rekap-row" onclick="siswaPage('catat');selectDay(${d})">
+      <div class="day-num">${d}</div>
+      <div class="day-rekap-info"><div class="dname">Hari ke-${d}</div><div class="dstat">${cc} ibadah · ${localData[d].pages || 0} hal. · ${pts} poin</div></div>
+      <div class="day-rekap-bar-wrap"><div class="day-rekap-bar" style="width:${pctDay}%"></div></div>
+    </div>`;
+      }).join('');
+    }
+
+    async function profilChangePassword() {
+      const errEl = document.getElementById('profil-cpw-err');
+      errEl.classList.remove('show');
+      const old_password = document.getElementById('p-old').value;
+      const new_password = document.getElementById('p-new').value;
+      const confirm = document.getElementById('p-confirm').value;
+      if (!old_password || !new_password || !confirm) { showErr(errEl, 'Semua field wajib diisi'); return; }
+      if (new_password !== confirm) { showErr(errEl, 'Konfirmasi tidak cocok'); return; }
+      const { ok, data } = await api('POST', '/auth/change-password', { old_password, new_password });
+      if (!ok) { showErr(errEl, data.error || 'Gagal'); return; }
+      toast('✅ Password berhasil diubah!');
+      ['p-old', 'p-new', 'p-confirm'].forEach(id => document.getElementById(id).value = '');
+    }
+
+    // ════════════════════════════════════════════════
+    // ████ ROLE: WALI KELAS ██████████████████████
+    // ════════════════════════════════════════════════
+    function renderWali() {
+      const nav = document.getElementById('app-nav');
+      nav.innerHTML = `
+    <button class="active" onclick="waliPage('verifikasi')">✅ Verifikasi</button>
+    <button onclick="waliPage('cek-paraf')">📝 Cek Paraf</button>
+    <button onclick="waliPage('rekap')">📊 Rekap Kelas</button>
+    <button onclick="waliPage('profil')">👤 Profil</button>`;
+
+      document.getElementById('app-pages').innerHTML = `
+    <div id="wali-page-verifikasi" class="page active">
+      <div class="card">
+        <div class="section-title">⏳ Siswa Pending Verifikasi <span id="badge-pending-siswa" class="badge badge-pending">0</span></div>
+        <div id="list-pending-siswa"><div class="loading-screen"><span class="spinner"></span>Memuat...</div></div>
+      </div>
+      <div class="card" style="margin-top:0">
+        <div class="section-title">✅ Semua Siswa Kelas <strong>${currentUser.kelas}</strong></div>
+        <div id="list-all-siswa"><div class="loading-screen"><span class="spinner"></span>Memuat...</div></div>
+      </div>
+    </div>
+    
+    <!-- CEK PARAF PAGE -->
+    <div id="wali-page-cek-paraf" class="page">
+      <div class="card">
+        <div class="section-title">📝 Cek Paraf Orang Tua Per Hari</div>
+        <div style="display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap;">
+          <label style="font-size:12px;font-weight:700;color:var(--ink-soft);">Pilih Hari:</label>
+          <div class="day-grid" id="waliDayGrid" style="flex:1;min-width:200px;"></div>
+        </div>
+        <div id="wali-verification-list"><div class="empty-state"><div class="big">👆</div><p>Pilih hari untuk melihat status paraf orang tua.</p></div></div>
+      </div>
+    </div>
+    
+    <div id="wali-page-rekap" class="page">
+      <div class="card">
+        <div class="section-title">📊 Rekap Kelas ${currentUser.kelas}</div>
+        <div id="wali-rekap-list"><div class="loading-screen"><span class="spinner"></span>Memuat...</div></div>
+      </div>
+    </div>
+    <div id="wali-page-profil" class="page">
+      <div class="card">
+        <div class="card-title">👤 Profil Saya</div>
+        <div class="info-item"><div class="info-icon">👤</div><div><h3>Nama</h3><p>${currentUser.name}</p></div></div>
+        <div class="info-item"><div class="info-icon">🏫</div><div><h3>Kelas Diampu</h3><p>${currentUser.kelas || '—'}</p></div></div>
+        <div class="info-item"><div class="info-icon">🔑</div><div><h3>Username</h3><p>${currentUser.username}</p></div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">🔐 Ganti Password</div>
+        <div id="wali-cpw-err" class="auth-error"></div>
+        <div class="field"><label>Password Lama</label><input id="w-old" type="password" placeholder="Password saat ini"/></div>
+        <div class="field"><label>Password Baru</label><input id="w-new" type="password" placeholder="Min. 6 karakter"/></div>
+        <div class="field"><label>Konfirmasi</label><input id="w-confirm" type="password" placeholder="Ulangi password baru"/></div>
+        <button class="btn-primary" style="margin-top:4px" onclick="waliChangePassword()">Ganti Password</button>
+      </div>
+    </div>`;
+
+      loadWaliVerifikasi();
+    }
+
+    function waliPage(name) {
+      document.querySelectorAll('#app-pages .page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('#app-nav button').forEach((b, i) => b.classList.toggle('active', ['verifikasi', 'cek-paraf', 'rekap', 'profil'][i] === name));
+      document.getElementById('wali-page-' + name).classList.add('active');
+      if (name === 'cek-paraf') loadWaliCekParaf();
+      if (name === 'rekap') loadWaliRekap();
+    }
+
+    async function loadWaliVerifikasi() {
+      // Pending
+      const { ok: ok1, data: d1 } = await api('GET', '/wali/siswa/pending');
+      const pendingEl = document.getElementById('list-pending-siswa');
+      const badge = document.getElementById('badge-pending-siswa');
+      if (ok1) {
+        badge.textContent = d1.siswa.length;
+        if (d1.siswa.length === 0) {
+          pendingEl.innerHTML = '<div class="empty-state"><div class="big">🎉</div><p>Tidak ada siswa pending.</p></div>';
+        } else {
+          pendingEl.innerHTML = d1.siswa.map(s => userRowHTML(s, 'siswa-pending')).join('');
+        }
+      }
+      // All siswa
+      const { ok: ok2, data: d2 } = await api('GET', '/wali/siswa');
+      const allEl = document.getElementById('list-all-siswa');
+      if (ok2) {
+        if (d2.siswa.length === 0) {
+          allEl.innerHTML = '<div class="empty-state"><div class="big">👥</div><p>Belum ada siswa terdaftar di kelas ini.</p></div>';
+        } else {
+          allEl.innerHTML = d2.siswa.map(s => userRowHTML(s, 'siswa-all')).join('');
+        }
+      }
+    }
+
+    function userRowHTML(u, ctx) {
+      const status = u.verified === 1 ? 'approved' : u.verified === 2 ? 'rejected' : 'pending';
+      const statusLabel = { approved: '✅ Terverifikasi', rejected: '❌ Ditolak', pending: '⏳ Pending' }[status];
+      const actions = (status === 'pending') ?
+        `<button class="btn-sm btn-approve" onclick="waliVerif(${u.id},'approve','${ctx}')">✓</button>
+     <button class="btn-sm btn-reject" onclick="waliVerif(${u.id},'reject','${ctx}')">✗</button>` :
+        `<span class="badge badge-${status}" style="font-size:10px">${statusLabel}</span>`;
+      return `<div class="user-row" id="urow-${u.id}">
+    <div class="user-avatar">${u.name[0]}</div>
+    <div class="user-info"><div class="uname">${u.name}</div><div class="umeta">@${u.username}${u.kelas ? ' · ' + u.kelas : ''}</div></div>
+    <div class="user-actions">${actions}</div>
+  </div>`;
+    }
+
+    async function waliVerif(id, action, ctx) {
+      let reason = undefined;
+      if (action === 'reject') {
+        reason = prompt('Alasan penolakan (opsional):') || undefined;
+      }
+      const { ok, data } = await api('PUT', `/wali/siswa/${id}/verify`, { action, reason });
+      if (!ok) { toast('❌ ' + (data.error || 'Gagal')); return; }
+      toast(action === 'approve' ? '✅ Siswa diverifikasi' : '❌ Siswa ditolak');
+      loadWaliVerifikasi();
+    }
+
+    async function loadWaliRekap() {
+      const el = document.getElementById('wali-rekap-list');
+      el.innerHTML = '<div class="loading-screen"><span class="spinner"></span>Memuat...</div>';
+      const { ok, data } = await api('GET', '/wali/rekap');
+      if (!ok) { el.innerHTML = '<div class="empty-state"><p>Gagal memuat rekap.</p></div>'; return; }
+      if (data.rekap.length === 0) { el.innerHTML = '<div class="empty-state"><div class="big">📋</div><p>Belum ada siswa terverifikasi.</p></div>'; return; }
+      el.innerHTML = data.rekap.map(s => {
+        const pct = s.hari_tercatat > 0 ? Math.round(s.hari_tercatat / 30 * 100) : 0;
+        return `<div class="rekap-siswa-row">
+      <div class="user-avatar" style="width:32px;height:32px;font-size:13px">${s.name[0]}</div>
+      <div style="flex:1;min-width:0">
+        <div class="rname">${s.name}</div>
+        <div class="rmeta">${s.hari_tercatat} hari · ${s.total_pages} hal. Qur'an</div>
+      </div>
+      <div class="rekap-mini-bar">
+        <div style="font-size:10px;color:var(--ink-soft);text-align:right">${pct}%</div>
+        <div class="rmb-wrap"><div class="rmb-fill" style="width:${pct}%"></div></div>
+      </div>
+    </div>`;
+      }).join('');
+    }
+
+    // ════════════════════════════════════════════════
+    // WALI: CEK PARAF
+    // ════════════════════════════════════════════════
+    let waliSelectedDay = null;
+
+    async function loadWaliCekParaf() {
+      const gridEl = document.getElementById('waliDayGrid');
+      const listEl = document.getElementById('wali-verification-list');
+      
+      // Build day grid
+      gridEl.innerHTML = '';
+      for (let d = 1; d <= 30; d++) {
+        const btn = document.createElement('button');
+        btn.className = 'day-btn';
+        btn.textContent = d;
+        btn.onclick = () => selectWaliDay(d);
+        gridEl.appendChild(btn);
+      }
+      
+      listEl.innerHTML = '<div class="empty-state"><div class="big">👆</div><p>Pilih hari untuk melihat status paraf orang tua.</p></div>';
+    }
+
+    async function selectWaliDay(day) {
+      waliSelectedDay = day;
+      
+      // Update day buttons
+      document.querySelectorAll('#waliDayGrid .day-btn').forEach((btn, i) => {
+        btn.classList.toggle('selected', i + 1 === day);
+      });
+      
+      const listEl = document.getElementById('wali-verification-list');
+      listEl.innerHTML = '<div class="loading-screen"><span class="spinner"></span>Memuat...</div>';
+      
+      // Fetch verification summary for this day
+      const { ok, data } = await api('GET', `/wali/verification-summary?day=${day}`);
+      if (!ok) {
+        listEl.innerHTML = '<div class="empty-state"><p>Gagal memuat data.</p></div>';
+        return;
+      }
+      
+      if (data.summary.length === 0) {
+        listEl.innerHTML = '<div class="empty-state"><div class="big">👥</div><p>Belum ada siswa di kelas ini.</p></div>';
+        return;
+      }
+      
+      // Count by status
+      const verified = data.summary.filter(s => s.verification_status === 'verified').length;
+      const pending = data.summary.filter(s => s.verification_status === 'pending').length;
+      const noData = data.summary.filter(s => s.verification_status === 'no_data').length;
+      
+      listEl.innerHTML = `
+        <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+          <span class="verify-badge verified" style="font-size:11px;padding:4px 10px;">✅ ${verified} Terverifikasi</span>
+          <span class="verify-badge pending" style="font-size:11px;padding:4px 10px;">⏳ ${pending} Pending</span>
+          <span class="badge" style="background:#ddd;color:#666;font-size:11px;padding:4px 10px;">📝 ${noData} Belum Isi</span>
+        </div>
+        ${buildVerificationListHTML(data.summary)}
+      `;
+    }
+
+    function buildVerificationListHTML(summary) {
+      if (summary.length === 0) return '<div class="empty-state"><p>Tidak ada data.</p></div>';
+
+      return summary.map(s => {
+        const statusConfig = {
+          verified: { icon: '✅', color: 'var(--emerald)', bg: 'rgba(26, 92, 69, .15)', label: 'Terverifikasi' },
+          pending: { icon: '⏳', color: 'var(--gold)', bg: 'rgba(201, 150, 60, .15)', label: 'Belum Paraf' },
+          no_data: { icon: '📝', color: '#999', bg: '#f5f5f5', label: 'Belum Isi' }
+        };
+        const cfg = statusConfig[s.verification_status];
+
+        let signatureHTML = '';
+        if (s.parent_signature) {
+          signatureHTML = `<div style="margin-top:8px;">
+            <div style="font-size:9px;color:var(--ink-soft);margin-bottom:4px;font-weight:700;">✍️ Tanda Tangan</div>
+            <img src="${s.parent_signature}" alt="TTD ${s.parent_name}" style="width:80px;height:60px;object-fit:contain;background:#fff;border-radius:6px;border:2px solid var(--gold);cursor:pointer;box-shadow:0 2px 4px rgba(0,0,0,0.1);" onclick="viewParentSignature('${s.parent_signature}', '${s.name}', '${s.parent_name}')" />
+          </div>`;
+        }
+
+        // Reset button for verified students
+        let resetButtonHTML = '';
+        if (s.verification_status === 'verified' && s.day) {
+          resetButtonHTML = `<button class="btn-signature" onclick="resetStudentVerification(${s.id}, ${s.day}, '${s.name}')" style="margin-top:8px;font-size:10px;padding:4px 10px;background:var(--red);color:#fff;border:none;">🔄 Batalkan Verifikasi</button>`;
+        }
+
+        return `<div class="user-row" style="padding:14px 0;align-items:flex-start;border-bottom:1px dashed rgba(201,150,60,0.15);">
+          <div class="user-avatar" style="background:${cfg.bg};color:${cfg.color};flex-shrink:0;width:42px;height:42px;font-size:16px;">${s.name[0]}</div>
+          <div class="user-info" style="flex:1;min-width:0;">
+            <div class="uname" style="font-weight:700;color:${cfg.color};margin-bottom:6px;font-size:14px;">${cfg.icon} ${s.name}</div>
+            <div class="umeta" style="font-size:11px;color:var(--ink-soft);">
+              ${s.has_data ? (s.pages > 0 ? s.pages + ' halaman Qur\'an' : 'Sudah mengisi kegiatan') : 'Belum mengisi kegiatan'}
+            </div>
+            ${signatureHTML}
+            ${resetButtonHTML}
+          </div>
+          <div style="text-align:right;flex-shrink:0;min-width:140px;margin-left:12px;">
+            <span class="badge badge-${s.verification_status === 'verified' ? 'approved' : s.verification_status === 'pending' ? 'pending' : ''}"
+                  style="background:${s.verification_status === 'verified' ? 'rgba(26,92,69,0.12)' : s.verification_status === 'pending' ? 'rgba(201,150,60,0.12)' : '#f0f0f0'};color:${s.verification_status === 'verified' ? 'var(--emerald)' : s.verification_status === 'pending' ? 'var(--gold)' : '#888'};border:1px solid ${s.verification_status === 'verified' ? 'var(--emerald)' : s.verification_status === 'pending' ? 'var(--gold)' : '#ccc'};font-size:10px;padding:6px 10px;display:block;margin-bottom:6px;border-radius:12px;font-weight:700;">
+              ${cfg.label}
+            </span>
+            ${s.parent_name ? `<div style="font-size:11px;color:var(--ink-soft);font-weight:600;">👤 ${s.parent_name}</div>` : ''}
+            ${s.parent_verified_at ? `<div style="font-size:10px;color:#999;margin-top:3px;">📅 ${new Date(s.parent_verified_at).toLocaleDateString('id-ID', {day:'numeric',month:'short',year:'numeric'})}</div>` : ''}
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    function viewParentSignature(signatureSrc, studentName, parentName) {
+      const modal = document.createElement('div');
+      modal.id = 'signatureModal';
+      modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:99999;display:flex;align-items:center;justify-content:center;flex-direction:column;';
+      modal.innerHTML = `
+        <div style="color:#fff;font-size:16px;margin-bottom:16px;font-weight:700;">✍️ Tanda Tangan - ${parentName}</div>
+        <div style="background:#fff;padding:24px;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+          <img src="${signatureSrc}" alt="Tanda Tangan ${parentName}" style="max-width:400px;max-height:200px;object-fit:contain;" />
+        </div>
+        <div style="color:#ccc;font-size:12px;margin-top:12px;">Orang Tua dari ${studentName}</div>
+        <button onclick="document.getElementById('signatureModal').remove()" style="margin-top:20px;padding:12px 32px;background:var(--emerald);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;">Tutup</button>
+      `;
+      document.body.appendChild(modal);
+      modal.onclick = (e) => { if (e.target === modal) modal.remove(); };
+    }
+
+    // Reset student verification
+    async function resetStudentVerification(siswaId, day, studentName) {
+      if (!confirm(`⚠️ Yakin ingin membatalkan verifikasi untuk:\n\n👤 Siswa: ${studentName}\n📅 Hari: ${day}\n\nSiswa akan dapat mengisi ulang kegiatan hari ini.`)) {
+        return;
+      }
+
+      try {
+        const { ok, data } = await api('POST', `/wali/siswa/${siswaId}/reset-verification`, { day });
+        
+        if (!ok) {
+          toast('❌ ' + (data.error || 'Gagal mereset verifikasi'));
+          return;
+        }
+        
+        toast('✅ ' + data.message);
+        
+        // Reload the verification list for current day
+        if (waliSelectedDay) {
+          selectWaliDay(waliSelectedDay);
+        }
+      } catch (err) {
+        toast('❌ Terjadi kesalahan: ' + err.message);
+      }
+    }
+
+    async function waliChangePassword() {
+      const errEl = document.getElementById('wali-cpw-err');
+      errEl.classList.remove('show');
+      const old_password = document.getElementById('w-old').value;
+      const new_password = document.getElementById('w-new').value;
+      const confirm = document.getElementById('w-confirm').value;
+      if (!old_password || !new_password || !confirm) { showErr(errEl, 'Semua field wajib diisi'); return; }
+      if (new_password !== confirm) { showErr(errEl, 'Konfirmasi tidak cocok'); return; }
+      const { ok, data } = await api('POST', '/auth/change-password', { old_password, new_password });
+      if (!ok) { showErr(errEl, data.error || 'Gagal'); return; }
+      toast('✅ Password berhasil diubah!');
+      ['w-old', 'w-new', 'w-confirm'].forEach(id => document.getElementById(id).value = '');
+    }
+
+    // ════════════════════════════════════════════════
+    // ████ ROLE: ADMIN ████████████████████████████
+    // ════════════════════════════════════════════════
+    function renderAdmin() {
+      const nav = document.getElementById('app-nav');
+      nav.innerHTML = `
+    <button class="active" onclick="adminPage('dashboard')">🏠 Dashboard</button>
+    <button onclick="adminPage('wali')">👩‍🏫 Wali Kelas</button>
+    <button onclick="adminPage('siswa')">🎓 Siswa</button>
+    <button onclick="adminPage('profil')">👤 Profil</button>`;
+
+      document.getElementById('app-pages').innerHTML = `
+    <!-- DASHBOARD -->
+    <div id="admin-page-dashboard" class="page active">
+      <div style="margin:14px">
+        <div id="admin-stats-grid" class="stat-big-grid"><div class="loading-screen"><span class="spinner"></span>Memuat...</div></div>
+      </div>
+      <div class="card">
+        <div class="section-title">⏳ Wali Kelas Pending Verifikasi <span id="badge-pending-wali" class="badge badge-pending">0</span></div>
+        <div id="list-pending-wali"><div class="loading-screen"><span class="spinner"></span>Memuat...</div></div>
+      </div>
+    </div>
+    <!-- WALI KELAS -->
+    <div id="admin-page-wali" class="page">
+      <div class="card">
+        <div class="section-title">👩‍🏫 Semua Wali Kelas</div>
+        <div id="list-all-wali"><div class="loading-screen"><span class="spinner"></span>Memuat...</div></div>
+      </div>
+    </div>
+    <!-- SISWA -->
+    <div id="admin-page-siswa" class="page">
+      <div class="card">
+        <div class="section-title">🎓 Semua Siswa</div>
+        <div id="list-all-siswa-admin"><div class="loading-screen"><span class="spinner"></span>Memuat...</div></div>
+      </div>
+    </div>
+    <!-- PROFIL -->
+    <div id="admin-page-profil" class="page">
+      <div class="card">
+        <div class="card-title">👤 Profil Admin</div>
+        <div class="info-item"><div class="info-icon">👤</div><div><h3>Nama</h3><p>${currentUser.name}</p></div></div>
+        <div class="info-item"><div class="info-icon">🔑</div><div><h3>Username</h3><p>${currentUser.username}</p></div></div>
+        <div class="info-item"><div class="info-icon">🛡️</div><div><h3>Role</h3><p>Administrator</p></div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">🔐 Ganti Password</div>
+        <div id="admin-cpw-err" class="auth-error"></div>
+        <div class="field"><label>Password Lama</label><input id="a-old" type="password" placeholder="Password saat ini"/></div>
+        <div class="field"><label>Password Baru</label><input id="a-new" type="password" placeholder="Min. 6 karakter"/></div>
+        <div class="field"><label>Konfirmasi</label><input id="a-confirm" type="password" placeholder="Ulangi password baru"/></div>
+        <button class="btn-primary btn-gold" style="margin-top:4px" onclick="adminChangePassword()">Ganti Password</button>
+      </div>
+    </div>`;
+
+      loadAdminDashboard();
+    }
+
+    function adminPage(name) {
+      document.querySelectorAll('#app-pages .page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('#app-nav button').forEach((b, i) => b.classList.toggle('active', ['dashboard', 'wali', 'siswa', 'profil'][i] === name));
+      document.getElementById('admin-page-' + name).classList.add('active');
+      if (name === 'wali') loadAdminWali();
+      if (name === 'siswa') loadAdminSiswa();
+    }
+
+    async function loadAdminDashboard() {
+      const { ok, data } = await api('GET', '/admin/stats');
+      const grid = document.getElementById('admin-stats-grid');
+      if (ok) {
+        const s = data.stats;
+        grid.innerHTML = `
+      <div class="stat-big"><div class="val">${s.total_wali_kelas}</div><div class="key">Wali Kelas</div></div>
+      <div class="stat-big"><div class="val">${s.total_siswa}</div><div class="key">Siswa</div></div>
+      <div class="stat-big"><div class="val">${s.pending_wali_kelas}</div><div class="key">Pending Wali</div></div>
+      <div class="stat-big"><div class="val">${s.total_quran_pages}</div><div class="key">Hal. Qur'an</div></div>`;
+      }
+
+      // Pending wali
+      const { ok: ok2, data: d2 } = await api('GET', '/admin/users/pending');
+      const el = document.getElementById('list-pending-wali');
+      const badge = document.getElementById('badge-pending-wali');
+      if (ok2) {
+        badge.textContent = d2.users.length;
+        if (d2.users.length === 0) {
+          el.innerHTML = '<div class="empty-state"><div class="big">🎉</div><p>Tidak ada wali kelas pending.</p></div>';
+        } else {
+          el.innerHTML = d2.users.map(u => `<div class="user-row" id="admin-urow-${u.id}">
+        <div class="user-avatar">${u.name[0]}</div>
+        <div class="user-info"><div class="uname">${u.name}</div><div class="umeta">@${u.username}${u.kelas ? ' · Kelas ' + u.kelas : ''}</div></div>
+        <div class="user-actions">
+          <button class="btn-sm btn-approve" onclick="adminVerifWali(${u.id},'approve')">✓ Setujui</button>
+          <button class="btn-sm btn-reject" onclick="adminVerifWali(${u.id},'reject')">✗ Tolak</button>
+        </div>
+      </div>`).join('');
+        }
+      }
+    }
+
+    async function adminVerifWali(id, action) {
+      let reason = undefined;
+      if (action === 'reject') reason = prompt('Alasan penolakan (opsional):') || undefined;
+      const { ok, data } = await api('PUT', `/admin/users/${id}/verify`, { action, reason });
+      if (!ok) { toast('❌ ' + (data.error || 'Gagal')); return; }
+      toast(action === 'approve' ? '✅ Wali kelas diverifikasi' : '❌ Wali kelas ditolak');
+      loadAdminDashboard();
+    }
+
+    async function loadAdminWali() {
+      const el = document.getElementById('list-all-wali');
+      el.innerHTML = '<div class="loading-screen"><span class="spinner"></span>Memuat...</div>';
+      const { ok, data } = await api('GET', '/admin/users?role=wali_kelas');
+      if (!ok) { el.innerHTML = '<p style="padding:16px;color:var(--ink-soft)">Gagal memuat data.</p>'; return; }
+      if (data.users.length === 0) { el.innerHTML = '<div class="empty-state"><div class="big">👩‍🏫</div><p>Belum ada wali kelas terdaftar.</p></div>'; return; }
+      el.innerHTML = data.users.map(u => {
+        const badge = u.verified === 1 ? 'approved' : u.verified === 2 ? 'rejected' : 'pending';
+        const badgeLabel = { approved: 'Terverifikasi', rejected: 'Ditolak', pending: 'Pending' }[badge];
+        return `<div class="user-row">
+      <div class="user-avatar">${u.name[0]}</div>
+      <div class="user-info"><div class="uname">${u.name}</div><div class="umeta">@${u.username}${u.kelas ? ' · Kelas ' + u.kelas : ''}</div></div>
+      <div class="user-actions">
+        <span class="badge badge-${badge}">${badgeLabel}</span>
+        <button class="btn-sm btn-reject" onclick="adminDeleteUser(${u.id},'${u.name}')" style="margin-left:4px">🗑</button>
+      </div>
+    </div>`;
+      }).join('');
+    }
+
+    async function loadAdminSiswa() {
+      const el = document.getElementById('list-all-siswa-admin');
+      el.innerHTML = '<div class="loading-screen"><span class="spinner"></span>Memuat...</div>';
+      const { ok, data } = await api('GET', '/admin/users?role=siswa');
+      if (!ok) { el.innerHTML = '<p style="padding:16px;color:var(--ink-soft)">Gagal memuat data.</p>'; return; }
+      if (data.users.length === 0) { el.innerHTML = '<div class="empty-state"><div class="big">🎓</div><p>Belum ada siswa terdaftar.</p></div>'; return; }
+      // group by kelas
+      const byKelas = {};
+      for (const u of data.users) {
+        const k = u.kelas || 'Tanpa Kelas';
+        if (!byKelas[k]) byKelas[k] = [];
+        byKelas[k].push(u);
+      }
+      el.innerHTML = Object.entries(byKelas).sort().map(([kelas, list]) => `
+    <div style="margin-bottom:12px">
+      <div style="font-size:11px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;padding:6px 0;border-bottom:1px solid rgba(201,150,60,.2)">Kelas ${kelas} (${list.length} siswa)</div>
+      ${list.map(u => {
+        const badge = u.verified === 1 ? 'approved' : u.verified === 2 ? 'rejected' : 'pending';
+        const badgeLabel = { approved: '✅', rejected: '❌', pending: '⏳' }[badge];
+        return `<div class="user-row">
+          <div class="user-avatar" style="width:32px;height:32px;font-size:12px">${u.name[0]}</div>
+          <div class="user-info"><div class="uname">${u.name}</div><div class="umeta">@${u.username}</div></div>
+          <div class="user-actions">
+            <span class="badge badge-${badge}">${badgeLabel}</span>
+            <button class="btn-sm btn-reject" onclick="adminDeleteUser(${u.id},'${u.name}')" style="margin-left:4px">🗑</button>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>`).join('');
+    }
+
+    async function adminDeleteUser(id, name) {
+      if (!confirm(`Hapus user "${name}"? Tindakan ini tidak bisa dibatalkan.`)) return;
+      const { ok, data } = await api('DELETE', `/admin/users/${id}`);
+      if (!ok) { toast('❌ ' + (data.error || 'Gagal')); return; }
+      toast('🗑️ User dihapus');
+      loadAdminDashboard();
+    }
+
+    async function adminChangePassword() {
+      const errEl = document.getElementById('admin-cpw-err');
+      errEl.classList.remove('show');
+      const old_password = document.getElementById('a-old').value;
+      const new_password = document.getElementById('a-new').value;
+      const confirm = document.getElementById('a-confirm').value;
+      if (!old_password || !new_password || !confirm) { showErr(errEl, 'Semua field wajib diisi'); return; }
+      if (new_password !== confirm) { showErr(errEl, 'Konfirmasi tidak cocok'); return; }
+      const { ok, data } = await api('POST', '/auth/change-password', { old_password, new_password });
+      if (!ok) { showErr(errEl, data.error || 'Gagal'); return; }
+      toast('✅ Password berhasil diubah!');
+      ['a-old', 'a-new', 'a-confirm'].forEach(id => document.getElementById(id).value = '');
+    }
+
+    // ════════════════════════════════════════════════
+    // INIT: cek token tersimpan
+    // ════════════════════════════════════════════════
+    (async function init() {
+      if (!token) { showScreen('auth'); return; }
+      // Verify token with /me
+      const { ok, data } = await api('GET', '/auth/me');
+      if (!ok) { token = null; localStorage.removeItem('rm_token'); showScreen('auth'); return; }
+      currentUser = data.user;
+      routeAfterLogin();
+    })();
+
+    // Enter key support on login
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        const loginActive = document.getElementById('form-login').classList.contains('active');
+        const authVisible = document.getElementById('screen-auth').classList.contains('active');
+        if (authVisible && loginActive) doLogin();
+      }
+    });
+    
+    // Resize canvas on window resize
+    window.addEventListener('resize', () => {
+      if (signatureCanvas && document.getElementById('signatureCanvas')) {
+        const rect = signatureCanvas.getBoundingClientRect();
+        const tempData = getSignatureData();
+        signatureCanvas.width = rect.width || 300;
+        signatureCanvas.height = rect.height || 120;
+        // Restore signature if exists
+        if (tempData) {
+          const img = new Image();
+          img.onload = () => signatureCtx.drawImage(img, 0, 0);
+          img.src = tempData;
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>

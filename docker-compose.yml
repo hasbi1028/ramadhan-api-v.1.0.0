@@ -1,0 +1,67 @@
+# ═══════════════════════════════════════════════════════
+# Ramadhan API - Docker Compose
+# ═══════════════════════════════════════════════════════
+# Usage:
+#   docker-compose up -d
+#   docker-compose down
+#   docker-compose logs -f
+
+version: '3.8'
+
+services:
+  ramadhan-api:
+    build: .
+    container_name: ramadhan-api
+    restart: unless-stopped
+    ports:
+      - "3002:3002"
+    volumes:
+      # Persist database
+      - ramadhan-db:/var/lib/ramadhan-api
+      # Persist backups
+      - ramadhan-backups:/backups/ramadhan
+      # Logs
+      - ramadhan-logs:/var/log/ramadhan-api
+    environment:
+      - NODE_ENV=production
+      - PORT=3002
+      - JWT_SECRET=${JWT_SECRET:-change-me-in-production}
+      - DATABASE_PATH=/var/lib/ramadhan-api/app.db
+      - BACKUP_DIR=/backups/ramadhan
+    healthcheck:
+      test: ["CMD", "bun", "-e", "fetch('http://localhost:3002/').then(r => r.ok ? process.exit(0) : process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - ramadhan-network
+
+  # Optional: Nginx reverse proxy
+  # Uncomment if you want to use nginx within docker
+  # nginx:
+  #   image: nginx:alpine
+  #   container_name: ramadhan-nginx
+  #   restart: unless-stopped
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - ./nginx.conf:/etc/nginx/nginx.conf:ro
+  #     - ./ssl:/etc/nginx/ssl:ro
+  #   depends_on:
+  #     - ramadhan-api
+  #   networks:
+  #     - ramadhan-network
+
+volumes:
+  ramadhan-db:
+    driver: local
+  ramadhan-backups:
+    driver: local
+  ramadhan-logs:
+    driver: local
+
+networks:
+  ramadhan-network:
+    driver: bridge

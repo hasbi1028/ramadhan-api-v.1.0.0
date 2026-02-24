@@ -1,0 +1,78 @@
+# Dependencies
+node_modules/
+.bun/
+
+# Database files (PRODUCTION DATA - NEVER COMMIT)
+*.db
+*.db-shm
+*.db-wal
+data/*.db
+/var/lib/ramadhan-api/
+
+# Environment variables (SECRETS)
+.env
+.env.local
+.env.production
+.env.*.local
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+bun-debug.log*
+journalctl/
+
+# Testing
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
+# Build outputs
+dist/
+build/
+*.exe
+*.min.js
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.bak
+*.cache
+
+# Backups
+backups/
+*.backup
+*.sql
+*.dump
+
+# Qwen AI
+.qwen/
+
+# Coverage
+coverage/
+
+# Misc
+.cache/
+.fuse_hidden*
+.nfs*

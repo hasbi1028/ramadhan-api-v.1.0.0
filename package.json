@@ -1,0 +1,37 @@
+{
+  "name": "ramadhan-api",
+  "version": "1.0.0",
+  "description": "Buku Amaliah Ramadhan - Digital Islamic activity tracker for students",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "bun run --hot src/index.ts",
+    "start": "bun run src/index.ts",
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "test:report": "playwright show-report",
+    "import:students": "bun run scripts/import-students.js",
+    "export:amaliah": "bun run scripts/export-amaliah.js",
+    "cleanup": "bun run scripts/cleanup-test-data.js"
+  },
+  "keywords": [
+    "ramadhan",
+    "islamic",
+    "school",
+    "activity-tracker"
+  ],
+  "author": "MTS School",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@hono/zod-validator": "^0.7.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "hono": "^4.12.2",
+    "hono-rate-limit": "^1.0.2",
+    "jsonwebtoken": "^9.0.3",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@types/bun": "latest"
+  }
+}
