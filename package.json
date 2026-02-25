@@ -1,11 +1,15 @@
 {
   "name": "ramadhan-api",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Buku Amaliah Ramadhan - Digital Islamic activity tracker for students",
   "main": "src/index.ts",
+  "type": "module",
   "scripts": {
     "dev": "bun run --hot src/index.ts",
     "start": "bun run src/index.ts",
+    "build": "bun run scripts/build-frontend.ts",
+    "build:dev": "NODE_ENV=development bun run scripts/build-frontend.ts",
+    "build:prod": "NODE_ENV=production bun run scripts/build-frontend.ts",
     "test": "playwright test",
     "test:headed": "playwright test --headed",
     "test:ui": "playwright test --ui",
@@ -18,7 +22,10 @@
     "ramadhan",
     "islamic",
     "school",
-    "activity-tracker"
+    "activity-tracker",
+    "react",
+    "bun",
+    "hono"
   ],
   "author": "MTS School",
   "license": "UNLICENSED",
@@ -28,10 +35,20 @@
     "hono": "^4.12.2",
     "hono-rate-limit": "^1.0.2",
     "jsonwebtoken": "^9.0.3",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-signature-canvas": "^1.1.0-alpha.2",
     "zod": "^4.3.6"
   },
   "devDependencies": {
     "@playwright/test": "^1.58.2",
-    "@types/bun": "latest"
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@types/bun": "latest",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@types/react-signature-canvas": "^1.0.7",
+    "@vitejs/plugin-react": "^5.1.4",
+    "vitest": "^4.0.18"
   }
 }

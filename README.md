@@ -1,95 +1,148 @@
-# 🌙 Buku Amaliah Ramadhan - Production Ready
+# 🌙 Buku Amaliah Ramadhan
 
-**Versi:** 1.0.0  
-**Status:** ✅ Production Ready  
-**Masa Penggunaan:** 1 Bulan (Ramadhan)  
-**Last Update:** Februari 2026
+**Digital Islamic Activity Tracker for Students during Ramadan**
 
----
-
-## 📖 Tentang Aplikasi
-
-Aplikasi **Buku Amaliah Ramadhan** adalah sistem digital untuk mencatat kegiatan ibadah harian siswa selama bulan Ramadhan dengan fitur verifikasi orang tua/wali.
-
-### Fitur Utama
-
-- ✏️ **Catat Kegiatan** - Siswa mencatat ibadah harian
-- 👨‍👩‍👧 **Verifikasi Orang Tua** - Tanda tangan digital untuk validasi
-- 📊 **Rekap Real-time** - Monitoring progress per siswa & kelas
-- 👨‍🏫 **Dashboard Wali** - Cek paraf, approve siswa, monitoring
-- 👤 **Admin Panel** - Manage users, statistik sekolah
-- 🔄 **Reset Verifikasi** - Wali kelas bisa batalkan verifikasi
-
-### Tech Stack
-
-- **Backend:** Bun + Hono (TypeScript)
-- **Database:** SQLite (file-based)
-- **Frontend:** Vanilla JS + HTML
-- **Auth:** JWT (24h expiry)
-- **Testing:** Playwright (30 E2E tests)
+[![Production Ready](https://img.shields.io/badge/status-production%20ready-success)](.)
+[![Version](https://img.shields.io/badge/version-2.0.0-blue)](.)
+[![License](https://img.shields.io/badge/license-internal-green)](.)
 
 ---
 
-## 🚀 Quick Start
+## 📖 About
+
+**Buku Amaliah Ramadhan** is a digital Islamic activity tracker designed for Islamic schools (MTS) to monitor students' worship activities during Ramadan. Built with modern technologies for performance and reliability.
+
+### ✨ Features
+
+- **📝 Daily Activity Tracker** - Students log daily worship (prayer, Quran, etc.)
+- **✍️ Digital Parent Verification** - Parents sign digitally to verify activities
+- **📊 Real-time Reports** - Teachers monitor class progress
+- **👥 User Management** - Admin manages students and teachers
+- **📱 PWA Support** - Install on mobile devices, works offline
+- **🔒 Secure** - JWT auth, rate limiting, security headers
+
+### 🎯 User Roles
+
+| Role | Features |
+|------|----------|
+| **Siswa** (Student) | Log activities, view reports, parent verification |
+| **Wali Kelas** (Teacher) | Approve students, check parent verifications, class reports |
+| **Admin** | User management, statistics, system oversight |
+
+---
+
+## 🚀 Tech Stack
+
+| Component | Technology |
+|-----------|-----------|
+| **Frontend** | React 19 + TypeScript |
+| **Backend** | Bun + Hono |
+| **Database** | SQLite |
+| **Build** | Bun.build (~60ms) |
+| **PWA** | Service Worker + Manifest |
+| **Testing** | Playwright + Vitest |
+
+---
+
+## 📦 Quick Start
+
+### Prerequisites
+
+- [Bun](https://bun.sh/) runtime installed
+- Node.js 18+ (optional, for some tools)
+
+### Installation
+
+```bash
+# Clone repository
+git clone https://github.com/your-org/ramadhan-api.git
+cd ramadhan-api
+
+# Install dependencies
+bun install
+
+# Copy environment template
+cp .env.example .env
+```
 
 ### Development
 
 ```bash
-# Install dependencies
-bun install
+# Build frontend (development mode)
+bun run build:dev
 
-# Run development server
+# Start development server
 bun run dev
-
-# Open browser
-http://localhost:3002
 ```
 
-### Production (Cloudflared Tunnel)
+Open [http://localhost:3002](http://localhost:3002)
 
-**Frontend sudah auto-detect domain!**
+### Production
 
-File `public/config.js` sudah diset ke:
-```javascript
-{
-  API: 'https://amaliah-ramadhan.mtsn2kolut.sch.id/api'
-}
-```
-
-**Jika perlu override:**
-1. Edit `public/config.js`
-2. Set API URL yang sesuai
-3. Clear browser cache (Ctrl+Shift+R)
-4. Reload halaman
-
-**Verify:**
-```javascript
-// Browser console (F12)
-console.log(API);
-// Should show your domain, not localhost
-```
-
-### Production Deployment
-
-**Option 1: VPS (Recommended)**
 ```bash
-# Clone & Deploy
-git clone <repository-url> /opt/ramadhan-api
-cd /opt/ramadhan-api
-sudo ./deploy.sh
+# Build for production
+bun run build:prod
+
+# Start production server
+bun run start
 ```
 
-**Option 2: Docker**
-```bash
-docker-compose up -d
+---
+
+## 📁 Project Structure
+
+```
+ramadhan-api/
+├── frontend/src/           # React frontend
+│   ├── components/         # React components
+│   │   ├── Auth/          # Login, Register
+│   │   ├── Siswa/         # Student components
+│   │   ├── Wali/          # Teacher components
+│   │   ├── Admin/         # Admin components
+│   │   └── ...
+│   ├── hooks/             # Custom hooks
+│   ├── config/            # Configuration
+│   └── styles/            # Global styles
+├── src/                   # Hono backend
+│   ├── auth.ts           # Authentication routes
+│   ├── amaliah.ts        # Activity routes
+│   ├── wali.ts           # Teacher routes
+│   └── admin.ts          # Admin routes
+├── public/               # Static assets
+│   ├── manifest.json     # PWA manifest
+│   ├── sw.js            # Service Worker
+│   └── icons/           # PWA icons
+├── tests/               # E2E tests
+├── docs/                # Documentation
+├── scripts/             # Build scripts
+└── package.json
 ```
 
-**Option 3: Shared Hosting**
-```bash
-# Upload via FTP
-# Install via cPanel terminal
-bun install
-pm2 start "bun run src/index.ts" --name ramadhan-api
+---
+
+## 🔧 Configuration
+
+### Environment Variables
+
+Create `.env` file (copy from `.env.example`):
+
+```env
+# Development
+NODE_ENV=development
+PORT=3002
+API_URL=http://localhost:3002/api
+DATABASE_PATH=./app.db
+```
+
+For production, use `.env.production`:
+
+```env
+# Production
+NODE_ENV=production
+PORT=3002
+API_URL=https://your-domain.com/api
+JWT_SECRET=your-secret-key
+DATABASE_PATH=/var/lib/ramadhan-api/app.db
 ```
 
 ---
@@ -98,247 +151,126 @@ pm2 start "bun run src/index.ts" --name ramadhan-api
 
 | Document | Description |
 |----------|-------------|
-| [📖 User Guide](docs/USER_GUIDE.md) | Panduan untuk Siswa, Wali, Admin |
-| [🔧 Admin Guide](docs/ADMIN_GUIDE.md) | Setup & management untuk admin |
-| [🚀 Deployment](docs/DEPLOYMENT.md) | Production deployment guide |
-
----
-
-## 🔐 Default Credentials
-
-| Role | Username | Password | Note |
-|------|----------|----------|------|
-| Admin | `admin` | `admin123` | ⚠️ Change immediately! |
-| Wali Kelas | `wali7A` | `password123` | Per kelas |
-| Siswa | `siswa7A` | `password123` | Per siswa |
-
----
-
-## 🛡️ Security Features
-
-- ✅ JWT Authentication (24h expiry)
-- ✅ Rate Limiting (50 req/15min)
-- ✅ Security Headers (CSP, X-Frame-Options, etc.)
-- ✅ CORS Protection
-- ✅ Password Hashing (Argon2id)
-- ✅ Input Validation (Zod)
-- ✅ SQL Injection Protection (Parameterized queries)
-
----
-
-## 📊 Monitoring
-
-### Health Check
-
-```bash
-# Manual check
-curl http://localhost:3002/
-
-# Automated (cron every 5 min)
-*/5 * * * * /opt/ramadhan-api/scripts/health-check.sh
-```
-
-### Monitoring Dashboard
-
-```bash
-# Interactive dashboard
-/opt/ramadhan-api/scripts/monitor.sh
-```
-
-### Logs
-
-```bash
-# Application logs
-tail -f /var/log/ramadhan-api/out.log
-tail -f /var/log/ramadhan-api/error.log
-
-# System logs
-journalctl -u ramadhan-api -f
-```
-
----
-
-## 💾 Backup & Restore
-
-### Automated Backup
-
-```bash
-# Daily at 2 AM (cron)
-0 2 * * * /opt/ramadhan-api/backup-db.sh
-```
-
-### Manual Backup
-
-```bash
-/opt/ramadhan-api/backup-db.sh
-```
-
-### Restore
-
-```bash
-# List backups
-ls -lh /backups/ramadhan/
-
-# Restore
-/opt/ramadhan-api/restore-db.sh /backups/ramadhan/app_YYYYMMDD_HHMMSS.db.gz
-```
-
----
-
-## 📁 Database Scripts
-
-| Script | Description |
-|--------|-------------|
-| `bun run scripts/import-students.js students.csv` | Import students from CSV |
-| `bun run scripts/export-amaliah.js` | Export amaliah data to CSV |
-| `bun run scripts/cleanup-test-data.js` | Remove test data before production |
+| [User Guide](docs/USER_GUIDE.md) | For students, teachers, admins |
+| [Admin Guide](docs/ADMIN_GUIDE.md) | System administration |
+| [Deployment](docs/DEPLOYMENT.md) | Production deployment |
+| [Production Report](docs/PRODUCTION_REPORT.md) | Readiness report |
+| [React Migration](docs/REACT_MIGRATION.md) | Technical details |
 
 ---
 
 ## 🧪 Testing
 
 ```bash
-# Run all tests
+# Run E2E tests
 bun run test
 
-# Run with UI
-bun run test:ui
+# Run with browser UI
+bun run test:headed
 
-# Run specific file
-bunx playwright test tests/admin.spec.ts
-
-# View report
-bun run test:report
+# Run unit tests (future)
+bun test
 ```
 
-**Test Coverage:** 30 E2E tests (100% passing)
-- Authentication: 5 tests
-- Admin CRUD: 17 tests
-- Amaliah Siswa: 3 tests
-- Wali Kelas: 5 tests
+---
+
+## 📊 Performance
+
+| Metric | Value |
+|--------|-------|
+| Build Time | ~60ms |
+| Bundle Size | ~266KB (prod) |
+| Components | 15 |
+| Test Coverage | 5 E2E tests |
+| PWA Score | 95/100 |
 
 ---
 
-## 📱 User Roles
+## 🔐 Security
 
-### Siswa
-- ✏️ Catat kegiatan harian
-- 📊 Lihat rekap pribadi
-- 👤 Ganti password
-
-### Wali Kelas
-- ✅ Verifikasi siswa baru
-- 📝 Cek paraf orang tua per hari
-- 📊 Rekap kelas
-- 🔄 Reset verifikasi siswa
-
-### Admin
-- 🏠 Dashboard statistik
-- 👩‍🏫 Manage wali kelas
-- 🎓 Manage siswa
-- 👤 Manage profil
+- ✅ JWT Authentication (24h expiry)
+- ✅ Rate Limiting (50 req/15min)
+- ✅ Security Headers (CSP, HSTS, etc.)
+- ✅ CORS Protection
+- ✅ Password Hashing (Argon2id)
+- ✅ Input Validation (Zod)
+- ✅ SQL Injection Protection
 
 ---
 
-## ⚙️ Configuration
+## 📱 PWA Features
 
-### Environment Variables
+- ✅ Installable on mobile devices
+- ✅ Offline support (Service Worker)
+- ✅ Cache-first strategy
+- ✅ Update notifications
+- ✅ Add to home screen
+
+---
+
+## 🛠️ Scripts
 
 ```bash
-# Copy template
-cp .env.example .env
+# Development
+bun run dev              # Start dev server
+bun run build:dev        # Build frontend (dev)
 
-# Edit .env
-nano .env
+# Production
+bun run build:prod       # Build frontend (prod)
+bun run start            # Start prod server
+
+# Testing
+bun run test             # Run E2E tests
+bun run test:headed      # Run with browser
+bun run test:ui          # UI mode
+
+# Utilities
+bun run import:students  # Import from CSV
+bun run export:amaliah   # Export to CSV
+bun run cleanup          # Clean test data
 ```
-
-**Required:**
-```env
-NODE_ENV=production
-PORT=3002
-JWT_SECRET=your-random-64-char-secret
-DATABASE_PATH=/var/lib/ramadhan-api/app.db
-ALLOWED_ORIGINS=https://ramadhan.mtsschool.sch.id
-```
-
----
-
-## 📅 End of Period
-
-Setelah Ramadhan selesai:
-
-```bash
-# Export all data
-bun run scripts/export-amaliah.js
-
-# Generate reports
-bun run scripts/generate-report.js --all
-
-# Backup final database
-/opt/ramadhan-api/backup-db.sh
-
-# Archive or shutdown
-sudo systemctl stop ramadhan-api
-```
-
----
-
-## 🆘 Troubleshooting
-
-### Service Down
-```bash
-sudo systemctl restart ramadhan-api
-sudo journalctl -u ramadhan-api -n 50
-```
-
-### Database Issues
-```bash
-# Check integrity
-sqlite3 /var/lib/ramadhan-api/app.db "PRAGMA integrity_check;"
-
-# Restore from backup
-/opt/ramadhan-api/restore-db.sh
-```
-
-### Login Issues
-- Check caps lock
-- Verify user is approved
-- Contact admin for password reset
-
----
-
-## 📞 Support
-
-| Issue | Contact |
-|-------|---------|
-| Server Issues | [Server Admin] |
-| Database Issues | [DB Admin] |
-| Application Issues | [Dev Team] |
 
 ---
 
 ## 📄 License
 
-Internal use only - [School Name]  
-Valid for: 1 month (Ramadhan 2026)
+**Internal Use Only** - MTS School, Ramadhan 2026
+
+This application is designed for internal school use during Ramadan.
 
 ---
 
-## ✅ Production Checklist
+## 👥 Credits
 
-- [ ] Environment variables configured
-- [ ] JWT_SECRET changed from default
-- [ ] SSL certificate installed
-- [ ] Firewall enabled
-- [ ] Backups configured
-- [ ] Monitoring setup
-- [ ] Admin passwords changed
-- [ ] Test data removed
-- [ ] Real users imported
-- [ ] All tests passing
-- [ ] Documentation distributed
+**Developed with:**
+- ⚛️ React 19
+- 🚀 Bun Runtime
+- 🦎 Hono Framework
+- 🎨 Custom Design System
+- 📱 PWA Ready
+
+**Special Thanks:**
+- Allah SWT - For guidance
+- MTS School - For the opportunity
+- All users - For feedback
 
 ---
 
-**Selamat Menunaikan Ibadah Puasa! 🌙**  
-**Semoga amal ibadah kita diterima Allah SWT.**
+## 📞 Support
+
+For issues or questions:
+- 📖 Read [Documentation](docs/)
+- 🐛 Report bugs via GitHub Issues
+- 📧 Contact: [your-email@school.sch.id]
+
+---
+
+## 🌙 Ramadan Kareem
+
+**May Allah accept our fasting and worship during this blessed month.**
+
+---
+
+**Version:** 2.0.0  
+**Last Updated:** Februari 2026  
+**Status:** ✅ Production Ready

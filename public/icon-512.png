@@ -1,0 +1,20 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="512" height="512" rx="100" fill="#0f3d2e"/>
+  
+  <!-- Moon (larger) -->
+  <path d="M380 150C380 150 330 120 280 150C230 180 200 230 230 280C260 330 310 360 310 360" stroke="#c9963c" stroke-width="20" stroke-linecap="round"/>
+  
+  <!-- Book (larger) -->
+  <rect x="130" y="280" width="252" height="160" rx="20" fill="#faf7f0"/>
+  <path d="M256 280V440" stroke="#c9963c" stroke-width="10"/>
+  <path d="M160 330H210" stroke="#0f3d2e" stroke-width="8" stroke-linecap="round"/>
+  <path d="M160 370H210" stroke="#0f3d2e" stroke-width="8" stroke-linecap="round"/>
+  <path d="M302 330H352" stroke="#0f3d2e" stroke-width="8" stroke-linecap="round"/>
+  <path d="M302 370H352" stroke="#0f3d2e" stroke-width="8" stroke-linecap="round"/>
+  
+  <!-- Stars (multiple) -->
+  <path d="M420 100L425 115L440 115L428 125L433 140L420 130L407 140L412 125L400 115L415 115L420 100Z" fill="#c9963c"/>
+  <path d="M100 120L104 132L116 132L106 140L110 152L100 144L90 152L94 140L84 132L96 132L100 120Z" fill="#c9963c"/>
+  <path d="M450 350L453 360L463 360L455 367L458 377L450 371L442 377L445 367L437 360L447 360L450 350Z" fill="#c9963c"/>
+</svg>

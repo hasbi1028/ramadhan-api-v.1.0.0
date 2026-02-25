@@ -1,0 +1,123 @@
+/**
+ * ═══════════════════════════════════════════════════════
+ * Global Styles
+ * ═══════════════════════════════════════════════════════
+ */
+
+/* Import Google Fonts - MUST come first */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Scheherazade+New:wght@400;700&family=Nunito:wght@400;600;700;800&display=swap');
+
+:root {
+  --emerald: #1a5c45;
+  --emerald-dark: #0f3d2e;
+  --emerald-light: #2a7a5c;
+  --gold: #c9963c;
+  --gold-light: #e8b86d;
+  --gold-pale: #fdf4e3;
+  --cream: #faf7f0;
+  --parchment: #f3ead8;
+  --ink: #2c2416;
+  --ink-soft: #5a4e3a;
+  --red: #c0392b;
+  --red-soft: rgba(192, 57, 43, 0.1);
+  --white: #fff;
+  --shadow: rgba(15, 61, 46, 0.18);
+  --blue: #3498db;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--emerald-dark);
+  min-height: 100vh;
+  color: var(--ink);
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* Animations */
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Loading Spinner */
+.loading-spinner {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(201, 150, 60, 0.3);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+/* Loading Skeleton */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(201, 150, 60, 0.1) 25%,
+    rgba(201, 150, 60, 0.2) 50%,
+    rgba(201, 150, 60, 0.1) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gold);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gold-light);
+}

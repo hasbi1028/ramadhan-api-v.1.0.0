@@ -1,55 +1,64 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('Authentication', () => {
+test.describe('Authentication - React', () => {
   test('should display login page', async ({ page }) => {
     await page.goto('/');
-    await expect(page.locator('#screen-auth')).toBeVisible();
+    await expect(page.locator('#root')).toBeVisible();
+    await expect(page.locator('text=Buku Amaliah Ramadhan')).toBeVisible({ timeout: 5000 });
   });
 
   test('should login with admin credentials', async ({ page }) => {
     await page.goto('/');
     
-    await page.fill('#l-username', 'admin');
-    await page.fill('#l-password', 'admin123');
-    await page.click('#btn-login');
+    await page.fill('input[placeholder="Masukkan username"]', 'admin');
+    await page.fill('input[type="password"]', 'admin123');
+    await page.click('button:has-text("Masuk")');
     
-    await expect(page.locator('#screen-app')).toBeVisible({ timeout: 5000 });
+    // Wait for dashboard to load
+    await expect(page.locator('text=Dashboard Admin')).toBeVisible({ timeout: 10000 });
   });
 
   test('should show error for invalid login', async ({ page }) => {
     await page.goto('/');
     
-    await page.fill('#l-username', 'admin');
-    await page.fill('#l-password', 'wrong');
-    await page.click('#btn-login');
+    await page.fill('input[placeholder="Masukkan username"]', 'admin');
+    await page.fill('input[type="password"]', 'wrongpassword');
+    await page.click('button:has-text("Masuk")');
     
-    await expect(page.locator('#login-error')).toBeVisible({ timeout: 5000 });
+    // Wait for error toast
+    await expect(page.locator('text=❌')).toBeVisible({ timeout: 5000 });
   });
 
   test('should register new siswa', async ({ page }) => {
     await page.goto('/');
     const timestamp = Date.now();
     
+    // Click Daftar tab
     await page.click('button:has-text("Daftar")');
-    await page.fill('#r-name', `Siswa Test ${timestamp}`);
-    await page.fill('#r-username', `siswatest${timestamp}`);
-    await page.fill('#r-password', 'test123');
-    await page.selectOption('#r-role', 'siswa');
-    await page.fill('#r-kelas', '7A');
-    await page.click('#btn-register');
     
-    await expect(page.locator('#reg-success')).toBeVisible({ timeout: 5000 });
+    await page.fill('input[placeholder="Nama sesuai data sekolah"]', `Siswa Test ${timestamp}`);
+    await page.fill('input[placeholder="Buat username unik"]', `siswatest${timestamp}`);
+    await page.fill('input[placeholder="Min. 6 karakter"]', 'test123');
+    await page.selectOption('select', 'siswa');
+    await page.fill('input[placeholder="Contoh: 7A, 8B, 9C"]', '7A');
+    
+    await page.click('button:has-text("Daftar Sekarang")');
+    
+    // Wait for success toast
+    await expect(page.locator('text=✅')).toBeVisible({ timeout: 5000 });
   });
 
-  test('should logout', async ({ page }) => {
+  test('should logout successfully', async ({ page }) => {
     await page.goto('/');
     
-    await page.fill('#l-username', 'admin');
-    await page.fill('#l-password', 'admin123');
-    await page.click('#btn-login');
-    await expect(page.locator('#screen-app')).toBeVisible({ timeout: 5000 });
+    // Login
+    await page.fill('input[placeholder="Masukkan username"]', 'admin');
+    await page.fill('input[type="password"]', 'admin123');
+    await page.click('button:has-text("Masuk")');
+    await expect(page.locator('text=Dashboard Admin')).toBeVisible({ timeout: 10000 });
     
-    await page.click('.logout-btn');
-    await expect(page.locator('#screen-auth')).toBeVisible({ timeout: 5000 });
+    // Logout
+    await page.click('button:has-text("Keluar")');
+    await expect(page.locator('text=Buku Amaliah Ramadhan')).toBeVisible({ timeout: 5000 });
   });
 });

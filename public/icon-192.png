@@ -1,0 +1,18 @@
+<svg width="192" height="192" viewBox="0 0 192 192" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="192" height="192" rx="40" fill="#0f3d2e"/>
+  
+  <!-- Moon -->
+  <path d="M140 60C140 60 120 50 100 60C80 70 70 90 80 110C90 130 110 140 110 140" stroke="#c9963c" stroke-width="8" stroke-linecap="round"/>
+  
+  <!-- Book -->
+  <rect x="50" y="100" width="92" height="60" rx="8" fill="#faf7f0"/>
+  <path d="M96 100V160" stroke="#c9963c" stroke-width="4"/>
+  <path d="M60 120H80" stroke="#0f3d2e" stroke-width="3" stroke-linecap="round"/>
+  <path d="M60 135H80" stroke="#0f3d2e" stroke-width="3" stroke-linecap="round"/>
+  <path d="M112 120H132" stroke="#0f3d2e" stroke-width="3" stroke-linecap="round"/>
+  <path d="M112 135H132" stroke="#0f3d2e" stroke-width="3" stroke-linecap="round"/>
+  
+  <!-- Star -->
+  <path d="M150 40L152 46L158 46L153 50L155 56L150 52L145 56L147 50L142 46L148 46L150 40Z" fill="#c9963c"/>
+</svg>
