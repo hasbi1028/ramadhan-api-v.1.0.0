@@ -1599,11 +1599,23 @@
     <div id="debug-content" style="overflow-y:auto;max-height:160px;"></div>
   </div>
 
+  <!-- Configuration (optional override) -->
+  <script src="config.js"></script>
+
   <script>
     // ════════════════════════════════════════════════
-    // CONFIG
+    // CONFIG - Dynamic API Detection
     // ════════════════════════════════════════════════
-    const API = 'http://localhost:3002/api';
+    // Auto-detect API URL based on current hostname
+    // Works for both localhost and production domains
+    const currentProtocol = window.location.protocol; // https: or http:
+    const currentHost = window.location.hostname;     // amaliah-ramadhan.mtsn2kolut.sch.id or localhost
+    const currentPort = window.location.port;         // Empty for standard ports, 3002 for dev
+    
+    // Build API URL dynamically
+    const API = window.APP_CONFIG?.API || 
+                `${currentProtocol}//${currentHost}${currentPort ? ':' + currentPort : ''}/api`;
+    
     const DEBUG = true;
 
     // ════════════════════════════════════════════════

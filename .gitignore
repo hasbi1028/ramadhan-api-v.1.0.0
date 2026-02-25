@@ -76,3 +76,6 @@ coverage/
 .cache/
 .fuse_hidden*
 .nfs*
+
+# Frontend config (safe to modify locally)
+public/config.js

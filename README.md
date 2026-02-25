@@ -45,6 +45,30 @@ bun run dev
 http://localhost:3002
 ```
 
+### Production (Cloudflared Tunnel)
+
+**Frontend sudah auto-detect domain!**
+
+File `public/config.js` sudah diset ke:
+```javascript
+{
+  API: 'https://amaliah-ramadhan.mtsn2kolut.sch.id/api'
+}
+```
+
+**Jika perlu override:**
+1. Edit `public/config.js`
+2. Set API URL yang sesuai
+3. Clear browser cache (Ctrl+Shift+R)
+4. Reload halaman
+
+**Verify:**
+```javascript
+// Browser console (F12)
+console.log(API);
+// Should show your domain, not localhost
+```
+
 ### Production Deployment
 
 **Option 1: VPS (Recommended)**
