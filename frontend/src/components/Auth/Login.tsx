@@ -91,6 +91,12 @@ const Login: React.FC<LoginProps> = ({ onLogin, onRegister }) => {
           <p style={{ fontSize: '12px', color: 'var(--ink-soft)', marginTop: '2px' }}>
             Catatan ibadah harian selama Ramadhan
           </p>
+          <p style={{ fontSize: '11px', color: 'var(--ink-soft)', marginTop: '6px', fontWeight: '700' }}>
+            MTs Negeri 2 Kolaka Utara
+          </p>
+          <p style={{ fontSize: '11px', color: 'var(--ink-soft)', marginTop: '2px' }}>
+            Dibuat oleh hasbi1028
+          </p>
         </div>
 
         {/* Tabs */}

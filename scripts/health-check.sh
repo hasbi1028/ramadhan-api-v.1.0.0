@@ -9,7 +9,7 @@
 set -e
 
 # Configuration
-APP_URL="http://localhost:3002"
+APP_URL="http://localhost:3010"
 SERVICE_NAME="ramadhan-api"
 LOG_FILE="/var/log/ramadhan-api/health-check.log"
 ALERT_EMAIL="admin@school.sch.id"

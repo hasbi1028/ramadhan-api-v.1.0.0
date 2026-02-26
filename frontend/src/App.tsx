@@ -17,6 +17,8 @@ import Verifikasi from './components/Wali/Verifikasi';
 import CekParaf from './components/Wali/CekParaf';
 import Dashboard from './components/Admin/Dashboard';
 import UserManagement from './components/Admin/UserManagement';
+import ClassManagement from './components/Admin/ClassManagement';
+import ProfilePage from './components/Profile/ProfilePage';
 import ToastContainer from './components/ToastContainer';
 
 interface User {
@@ -28,14 +30,20 @@ interface User {
   verified: number;
 }
 
-type Page = 'catat' | 'rekap' | 'profil';
+type Page = 'catat' | 'rekap' | 'verifikasi' | 'cek-paraf' | 'profil';
+type AdminTab = 'dashboard' | 'wali' | 'siswa' | 'kelas' | 'profil';
 
 const App: React.FC = () => {
+  const isDev = process.env.NODE_ENV !== 'production';
+  const devLog = (...args: unknown[]) => {
+    if (isDev) console.log(...args);
+  };
+
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [showRegister, setShowRegister] = useState(false);
   const [currentPage, setCurrentPage] = useState<Page>('catat');
-  const [adminTab, setAdminTab] = useState<'dashboard' | 'wali' | 'siswa'>('dashboard');
+  const [adminTab, setAdminTab] = useState<AdminTab>('dashboard');
   
   // Toast notifications
   const { toasts, success, error, info, warning, removeToast } = useToast();
@@ -44,14 +52,26 @@ const App: React.FC = () => {
   const { trackError } = useErrorTracking();
 
   useEffect(() => {
+    devLog('[UI] App init start');
+
     // Check if already logged in
     const token = localStorage.getItem('rm_token');
     const userData = localStorage.getItem('rm_user');
-    
+
     if (token && userData) {
-      setUser(JSON.parse(userData));
+      try {
+        const parsedUser = JSON.parse(userData) as User;
+        setUser(parsedUser);
+        devLog('[UI] Session restored', { username: parsedUser.username, role: parsedUser.role });
+      } catch (err) {
+        console.error('[UI] Invalid rm_user in localStorage, clearing session', { userData, err });
+        localStorage.removeItem('rm_token');
+        localStorage.removeItem('rm_user');
+      }
+    } else {
+      devLog('[UI] No saved session found');
     }
-    
+
     setLoading(false);
     
     // Register Service Worker for PWA
@@ -61,15 +81,23 @@ const App: React.FC = () => {
   }, []);
 
   const handleLogin = (userData: User, token: string) => {
+    devLog('[UI] Login success', { username: userData.username, role: userData.role });
     localStorage.setItem('rm_token', token);
     localStorage.setItem('rm_user', JSON.stringify(userData));
     setUser(userData);
   };
 
   const handleLogout = () => {
+    devLog('[UI] Logout');
     localStorage.removeItem('rm_token');
     localStorage.removeItem('rm_user');
     setUser(null);
+  };
+
+  const handleUserUpdated = (nextUser: User) => {
+    setUser(nextUser);
+    localStorage.setItem('rm_user', JSON.stringify(nextUser));
+    success('Profil berhasil diperbarui');
   };
 
   const renderPage = () => {
@@ -83,12 +111,7 @@ const App: React.FC = () => {
         case 'rekap':
           return <Rekap user={user} />;
         case 'profil':
-          return (
-            <div style={{ padding: '20px', textAlign: 'center', color: 'var(--white)' }}>
-              <h2>👤 Profil</h2>
-              <p>Coming soon...</p>
-            </div>
-          );
+          return <ProfilePage user={user} onUserUpdated={handleUserUpdated} />;
         default:
           return <Catat user={user} />;
       }
@@ -102,12 +125,7 @@ const App: React.FC = () => {
         case 'cek-paraf':
           return <CekParaf user={user} />;
         case 'profil':
-          return (
-            <div style={{ padding: '20px', textAlign: 'center', color: 'var(--white)' }}>
-              <h2>👤 Profil</h2>
-              <p>Coming soon...</p>
-            </div>
-          );
+          return <ProfilePage user={user} onUserUpdated={handleUserUpdated} />;
         default:
           return <Verifikasi user={user} />;
       }
@@ -122,6 +140,10 @@ const App: React.FC = () => {
           return <UserManagement user={user} role="wali_kelas" />;
         case 'siswa':
           return <UserManagement user={user} role="siswa" />;
+        case 'kelas':
+          return <ClassManagement user={user} />;
+        case 'profil':
+          return <ProfilePage user={user} onUserUpdated={handleUserUpdated} />;
         default:
           return <Dashboard user={user} />;
       }
@@ -318,6 +340,38 @@ const App: React.FC = () => {
           >
             🎓 Siswa
           </button>
+          <button
+            onClick={() => setAdminTab('kelas')}
+            style={{
+              flex: 1,
+              padding: '11px 6px',
+              background: 'none',
+              border: 'none',
+              color: adminTab === 'kelas' ? 'var(--gold-light)' : 'rgba(255,255,255,0.45)',
+              fontFamily: "'Nunito', sans-serif",
+              fontSize: '12px',
+              fontWeight: '700',
+              cursor: 'pointer',
+            }}
+          >
+            🏫 Kelas
+          </button>
+          <button
+            onClick={() => setAdminTab('profil')}
+            style={{
+              flex: 1,
+              padding: '11px 6px',
+              background: 'none',
+              border: 'none',
+              color: adminTab === 'profil' ? 'var(--gold-light)' : 'rgba(255,255,255,0.45)',
+              fontFamily: "'Nunito', sans-serif",
+              fontSize: '12px',
+              fontWeight: '700',
+              cursor: 'pointer',
+            }}
+          >
+            👤 Profil
+          </button>
         </nav>
       );
     }
@@ -380,6 +434,14 @@ const App: React.FC = () => {
             }}>
               Buku Amaliah
             </h1>
+            <div style={{
+              fontSize: '11px',
+              color: 'rgba(255,255,255,0.72)',
+              marginTop: '2px',
+              letterSpacing: '0.3px',
+            }}>
+              MTs Negeri 2 Kolaka Utara
+            </div>
           </div>
           <div style={{ textAlign: 'right' }}>
             <div style={{ 
@@ -425,6 +487,19 @@ const App: React.FC = () => {
       <main>
         {renderPage()}
       </main>
+
+      <footer
+        style={{
+          textAlign: 'center',
+          padding: '12px 16px 16px',
+          color: 'rgba(255,255,255,0.72)',
+          borderTop: '1px solid rgba(201, 150, 60, 0.2)',
+          marginTop: '8px',
+        }}
+      >
+        <div style={{ fontSize: '11px', fontWeight: '700' }}>MTs Negeri 2 Kolaka Utara</div>
+        <div style={{ fontSize: '11px', opacity: 0.9 }}>Dibuat oleh hasbi1028</div>
+      </footer>
     </div>
   );
 };

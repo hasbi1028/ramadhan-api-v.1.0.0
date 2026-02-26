@@ -39,8 +39,8 @@ test.describe('Authentication - React', () => {
     await page.fill('input[placeholder="Nama sesuai data sekolah"]', `Siswa Test ${timestamp}`);
     await page.fill('input[placeholder="Buat username unik"]', `siswatest${timestamp}`);
     await page.fill('input[placeholder="Min. 6 karakter"]', 'test123');
-    await page.selectOption('select', 'siswa');
-    await page.fill('input[placeholder="Contoh: 7A, 8B, 9C"]', '7A');
+    await page.selectOption('select[name="role"]', 'siswa');
+    await page.selectOption('select[name="kelas"]', '7A');
     
     await page.click('button:has-text("Daftar Sekarang")');
     

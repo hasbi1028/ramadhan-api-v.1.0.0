@@ -60,7 +60,7 @@ JWT_SECRET=$(openssl rand -hex 32)
 
 # Set environment
 NODE_ENV=production
-PORT=3002
+PORT=3010
 
 # Database path
 DATABASE_PATH=/var/lib/ramadhan-api/app.db
@@ -262,7 +262,7 @@ chmod 640 /var/lib/ramadhan-api/app.db
 sudo systemctl start ramadhan-api
 
 # Verify
-curl http://localhost:3002/
+curl http://localhost:3010/
 ```
 
 ### Backup Schedule
@@ -294,15 +294,15 @@ sudo journalctl -u ramadhan-api -n 100
 
 **Manual:**
 ```bash
-curl http://localhost:3002/
-curl http://localhost:3002/api/auth/me
+curl http://localhost:3010/
+curl http://localhost:3010/api/auth/me
 ```
 
 **Automated (cron every 5 min):**
 ```bash
 # /opt/ramadhan-api/scripts/health-check.sh
 #!/bin/bash
-RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3002/)
+RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3010/)
 if [ "$RESPONSE" != "200" ]; then
   echo "API DOWN! Response: $RESPONSE" | mail -s "ALERT" admin@school.sch.id
   sudo systemctl restart ramadhan-api
@@ -322,7 +322,7 @@ free -h
 ps aux | grep ramadhan
 
 # Open ports
-sudo netstat -tlnp | grep 3002
+sudo netstat -tlnp | grep 3010
 ```
 
 ### 4. Database Size
@@ -430,7 +430,7 @@ sudo systemctl restart ramadhan-api
 uptime
 
 # Check active connections
-sudo netstat -an | grep 3002 | wc -l
+sudo netstat -an | grep 3010 | wc -l
 
 # Check slow queries (enable query logging)
 # Add to app: console.log(query, time)

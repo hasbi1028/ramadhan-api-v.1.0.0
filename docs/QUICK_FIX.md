@@ -14,9 +14,9 @@
 
 ### Development (Local)
 ```
-http://localhost:3002
+http://localhost:3010
 ↓ auto-detect
-API: http://localhost:3002/api
+API: http://localhost:3010/api
 ```
 
 ### Production (Cloudflared)

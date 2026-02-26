@@ -1,0 +1,149 @@
+{
+  "version": "6",
+  "dialect": "sqlite",
+  "tables": {
+    "users": {
+      "name": "users",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "autoIncrement": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "notNull": true
+        },
+        "username": {
+          "name": "username",
+          "type": "text",
+          "notNull": true
+        },
+        "password": {
+          "name": "password",
+          "type": "text",
+          "notNull": true
+        },
+        "role": {
+          "name": "role",
+          "type": "text",
+          "notNull": true
+        },
+        "kelas": {
+          "name": "kelas",
+          "type": "text"
+        },
+        "verified": {
+          "name": "verified",
+          "type": "integer",
+          "default": 0
+        },
+        "rejected_reason": {
+          "name": "rejected_reason",
+          "type": "text"
+        },
+        "must_change_password": {
+          "name": "must_change_password",
+          "type": "integer",
+          "default": 0
+        }
+      }
+    },
+    "amaliah": {
+      "name": "amaliah",
+      "columns": {
+        "user_id": {
+          "name": "user_id",
+          "type": "integer",
+          "notNull": true
+        },
+        "day": {
+          "name": "day",
+          "type": "integer",
+          "notNull": true
+        },
+        "checks": {
+          "name": "checks",
+          "type": "text",
+          "default": "{}",
+          "notNull": true
+        },
+        "pages": {
+          "name": "pages",
+          "type": "integer",
+          "default": 0,
+          "notNull": true
+        },
+        "catatan": {
+          "name": "catatan",
+          "type": "text",
+          "default": "",
+          "notNull": true
+        },
+        "tema_tarawih": {
+          "name": "tema_tarawih",
+          "type": "text"
+        },
+        "tema_kultum_subuh": {
+          "name": "tema_kultum_subuh",
+          "type": "text"
+        },
+        "parent_verified": {
+          "name": "parent_verified",
+          "type": "integer",
+          "default": 0,
+          "notNull": true
+        },
+        "parent_name": {
+          "name": "parent_name",
+          "type": "text"
+        },
+        "parent_signature": {
+          "name": "parent_signature",
+          "type": "text"
+        },
+        "parent_verified_at": {
+          "name": "parent_verified_at",
+          "type": "text"
+        }
+      }
+    },
+    "classes": {
+      "name": "classes",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "autoIncrement": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "notNull": true
+        },
+        "is_active": {
+          "name": "is_active",
+          "type": "integer",
+          "default": 1,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "default": "CURRENT_TIMESTAMP",
+          "notNull": true
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "default": "CURRENT_TIMESTAMP",
+          "notNull": true
+        }
+      }
+    }
+  }
+}

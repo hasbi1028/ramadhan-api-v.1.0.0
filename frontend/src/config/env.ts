@@ -5,32 +5,55 @@
  * Auto-detect API URL based on hostname
  */
 
-// Get from Bun.env (build-time) or auto-detect (runtime)
-const BUILD_API_URL = process.env.API_URL;
+declare global {
+  interface Window {
+    APP_CONFIG?: {
+      API?: string;
+    };
+  }
+}
 
-export const API_URL = BUILD_API_URL || (function() {
+const isLocalHostname = (hostname: string): boolean =>
+  hostname === 'localhost' || hostname === '127.0.0.1';
+
+const isUnsafeLocalhostApi = (apiUrl: string): boolean =>
+  apiUrl.includes('localhost') || apiUrl.includes('127.0.0.1');
+
+const STAGING_API_URL = 'https://stg-amaliah-ramadhan.mtsn2kolut.sch.id/api';
+
+const shouldRejectLocalApiOnCurrentHost = (apiUrl: string): boolean => {
+  if (typeof window === 'undefined') return false;
+  return isUnsafeLocalhostApi(apiUrl) && !isLocalHostname(window.location.hostname.toLowerCase());
+};
+
+const getRuntimeApiUrl = (): string => {
   // Client-side auto-detect
   if (typeof window !== 'undefined') {
-    const host = window.location.hostname;
-    const protocol = window.location.protocol;
+    const runtimeApi = window.APP_CONFIG?.API?.trim();
+    if (runtimeApi && !shouldRejectLocalApiOnCurrentHost(runtimeApi)) {
+      return runtimeApi;
+    }
+    if (runtimeApi && shouldRejectLocalApiOnCurrentHost(runtimeApi)) {
+      console.warn('[ENV] Ignoring unsafe runtime API override on non-local host:', runtimeApi);
+    }
+
+    const host = window.location.hostname.toLowerCase();
     const port = window.location.port;
-    
-    // Production domain
-    if (host.includes('mtsn2kolut.sch.id')) {
-      return 'https://amaliah-ramadhan.mtsn2kolut.sch.id/api';
-    }
-    
+
     // Local development
-    if (host === 'localhost' || host === '127.0.0.1') {
-      return `http://localhost:${port || '3002'}/api`;
+    if (isLocalHostname(host)) {
+      return `http://localhost:${port || '3010'}/api`;
     }
-    
-    // Fallback: auto-detect
-    return `${protocol}//${host}${port ? ':' + port : ''}/api`;
+
+    // Default for non-local: use staging API domain explicitly.
+    return STAGING_API_URL;
   }
-  
-  return 'http://localhost:3002/api';
-})();
+
+  return 'https://amaliah-ramadhan.mtsn2kolut.sch.id/api';
+};
+
+// Frontend API URL is runtime-resolved to avoid stale build-time env issues on staging/production.
+export const API_URL = getRuntimeApiUrl();
 
 export const APP_CONFIG = {
   API: API_URL,

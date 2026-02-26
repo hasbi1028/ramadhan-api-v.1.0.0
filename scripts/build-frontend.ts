@@ -13,17 +13,22 @@ import { join } from 'path';
 console.log('🔨 Building frontend...\n');
 
 const startTime = Date.now();
+const isProd = (process.env.NODE_ENV || 'production') === 'production';
+const rawApiUrl = (process.env.API_URL || '').trim();
+const isLocalApi = rawApiUrl.includes('localhost') || rawApiUrl.includes('127.0.0.1');
+const buildApiUrl = isProd && isLocalApi ? '' : rawApiUrl;
 
 try {
   // Build React app
   const result = await build({
     entrypoints: ['./frontend/src/index.tsx'],
     outdir: './public/react',
+    tsconfig: './frontend/tsconfig.json',
     minify: true,
     target: 'browser',
     define: {
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production'),
-      'process.env.API_URL': JSON.stringify(process.env.API_URL || ''),
+      'process.env.API_URL': JSON.stringify(buildApiUrl),
     },
     splitting: false,
     sourcemap: process.env.NODE_ENV === 'development' ? 'inline' : false,
@@ -47,7 +52,7 @@ try {
   console.log(`   Output: ${result.outputs.length} files`);
   console.log(`   Size: ${(outputSize / 1024).toFixed(2)} KB`);
   console.log(`   Environment: ${process.env.NODE_ENV || 'production'}`);
-  console.log(`   API URL: ${process.env.API_URL || 'auto-detect'}\n`);
+  console.log(`   API URL: ${buildApiUrl || 'auto-detect'}\n`);
   console.log('✅ Frontend built successfully!\n');
 
 } catch (error) {

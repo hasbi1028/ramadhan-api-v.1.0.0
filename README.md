@@ -75,7 +75,7 @@ bun run build:dev
 bun run dev
 ```
 
-Open [http://localhost:3002](http://localhost:3002)
+Open [http://localhost:3010](http://localhost:3010)
 
 ### Production
 
@@ -129,8 +129,8 @@ Create `.env` file (copy from `.env.example`):
 ```env
 # Development
 NODE_ENV=development
-PORT=3002
-API_URL=http://localhost:3002/api
+PORT=3010
+API_URL=http://localhost:3010/api
 DATABASE_PATH=./app.db
 ```
 
@@ -139,7 +139,7 @@ For production, use `.env.production`:
 ```env
 # Production
 NODE_ENV=production
-PORT=3002
+PORT=3010
 API_URL=https://your-domain.com/api
 JWT_SECRET=your-secret-key
 DATABASE_PATH=/var/lib/ramadhan-api/app.db

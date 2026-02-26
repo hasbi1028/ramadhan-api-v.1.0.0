@@ -12,6 +12,10 @@ app.use('/*', authMiddleware)
 // Helper to check if user is Admin
 const isAdmin = (c: any) => c.get('user').role === 'admin'
 
+const classSchema = z.object({
+    name: z.string().min(1),
+})
+
 // --- Endpoints ---
 app.get('/stats', (c) => {
     if (!isAdmin(c)) return c.json({ error: 'Akses ditolak' }, 403)
@@ -47,6 +51,91 @@ app.get('/users/pending', (c) => {
     // Frontend specifically checks /admin/users/pending for wali_kelas pending (it has a badge)
     const users = db.query("SELECT id, name, username, kelas, verified FROM users WHERE role = 'wali_kelas' AND verified = 0").all()
     return c.json({ users })
+})
+
+app.get('/classes', (c) => {
+    if (!isAdmin(c)) return c.json({ error: 'Akses ditolak' }, 403)
+
+    const classes = db
+        .query("SELECT id, name, is_active FROM classes WHERE is_active = 1 ORDER BY name ASC")
+        .all()
+
+    return c.json({ classes })
+})
+
+app.post('/classes', zValidator('json', classSchema), (c) => {
+    if (!isAdmin(c)) return c.json({ error: 'Akses ditolak' }, 403)
+
+    const { name } = c.req.valid('json')
+    const trimmedName = name.trim()
+    if (!trimmedName) return c.json({ error: 'Nama kelas wajib diisi' }, 400)
+
+    const exists = db
+        .query("SELECT id FROM classes WHERE LOWER(name) = LOWER($name)")
+        .get({ $name: trimmedName }) as { id: number } | undefined
+    if (exists) return c.json({ error: 'Kelas sudah ada' }, 400)
+
+    db.run(
+        "INSERT INTO classes (name, is_active, created_at, updated_at) VALUES ($name, 1, $created_at, $updated_at)",
+        { $name: trimmedName, $created_at: new Date().toISOString(), $updated_at: new Date().toISOString() }
+    )
+
+    return c.json({ message: 'Kelas berhasil ditambahkan' }, 201)
+})
+
+app.put('/classes/:id', zValidator('json', classSchema), (c) => {
+    if (!isAdmin(c)) return c.json({ error: 'Akses ditolak' }, 403)
+
+    const classId = parseInt(c.req.param('id'))
+    if (isNaN(classId)) return c.json({ error: 'ID kelas tidak valid' }, 400)
+
+    const { name } = c.req.valid('json')
+    const trimmedName = name.trim()
+    if (!trimmedName) return c.json({ error: 'Nama kelas wajib diisi' }, 400)
+
+    const currentClass = db.query("SELECT id, name FROM classes WHERE id = $id").get({ $id: classId }) as { id: number, name: string } | undefined
+    if (!currentClass) return c.json({ error: 'Kelas tidak ditemukan' }, 404)
+
+    const duplicate = db
+        .query("SELECT id FROM classes WHERE LOWER(name) = LOWER($name) AND id != $id")
+        .get({ $name: trimmedName, $id: classId }) as { id: number } | undefined
+    if (duplicate) return c.json({ error: 'Nama kelas sudah digunakan' }, 400)
+
+    db.run("UPDATE classes SET name = $name, updated_at = $updated_at WHERE id = $id", {
+        $name: trimmedName,
+        $updated_at: new Date().toISOString(),
+        $id: classId,
+    })
+
+    if (currentClass.name !== trimmedName) {
+        db.run("UPDATE users SET kelas = $newClass WHERE kelas = $oldClass", {
+            $newClass: trimmedName,
+            $oldClass: currentClass.name,
+        })
+    }
+
+    return c.json({ message: 'Kelas berhasil diperbarui' })
+})
+
+app.delete('/classes/:id', (c) => {
+    if (!isAdmin(c)) return c.json({ error: 'Akses ditolak' }, 403)
+
+    const classId = parseInt(c.req.param('id'))
+    if (isNaN(classId)) return c.json({ error: 'ID kelas tidak valid' }, 400)
+
+    const classRow = db.query("SELECT id, name FROM classes WHERE id = $id").get({ $id: classId }) as { id: number, name: string } | undefined
+    if (!classRow) return c.json({ error: 'Kelas tidak ditemukan' }, 404)
+
+    const usedByUsers = db
+        .query("SELECT COUNT(*) as count FROM users WHERE kelas = $kelas")
+        .get({ $kelas: classRow.name }) as { count: number }
+
+    if (usedByUsers.count > 0) {
+        return c.json({ error: 'Kelas masih digunakan oleh user. Pindahkan user terlebih dahulu.' }, 400)
+    }
+
+    db.run("DELETE FROM classes WHERE id = $id", { $id: classId })
+    return c.json({ message: 'Kelas berhasil dihapus' })
 })
 
 app.put('/users/:id/verify', zValidator('json', z.object({ action: z.enum(['approve', 'reject']), reason: z.string().optional() })), (c) => {

@@ -95,7 +95,7 @@ nano .env
 **Minimum configuration:**
 ```env
 NODE_ENV=production
-PORT=3002
+PORT=3010
 
 # Generate new secret: openssl rand -hex 32
 JWT_SECRET=your-64-character-random-secret-key-here
@@ -183,7 +183,7 @@ server {
     server_name ramadhan.mtsschool.sch.id;
 
     location / {
-        proxy_pass http://localhost:3002;
+        proxy_pass http://localhost:3010;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
@@ -237,32 +237,7 @@ ufw status
 
 ---
 
-### Option 2: Docker Deployment
-
-**Prerequisites:** Docker & Docker Compose installed
-
-#### Step 1: Build Image
-
-```bash
-cd /opt/ramadhan-api
-docker build -t ramadhan-api:latest .
-```
-
-#### Step 2: Run with Docker Compose
-
-```bash
-docker-compose up -d
-```
-
-**Verify:**
-```bash
-docker-compose ps
-docker-compose logs -f
-```
-
----
-
-### Option 3: Shared Hosting
+### Option 2: Shared Hosting
 
 **Provider:** Niagahoster / Hostinger  
 **Cost:** Rp 30rb/month
@@ -318,10 +293,10 @@ cPanel → Subdomains:
 
 ```apache
 RewriteEngine On
-RewriteRule ^$ http://localhost:3002/ [P,L]
+RewriteRule ^$ http://localhost:3010/ [P,L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ http://localhost:3002/$1 [P,L]
+RewriteRule ^(.*)$ http://localhost:3010/$1 [P,L]
 ```
 
 ---
@@ -338,7 +313,7 @@ systemctl status ramadhan-api
 tail -f /var/log/ramadhan-api/out.log
 
 # Test endpoint
-curl http://localhost:3002/
+curl http://localhost:3010/
 curl https://ramadhan.mtsschool.sch.id/
 
 # Test API
@@ -375,7 +350,7 @@ nano /opt/ramadhan-api/scripts/health-check.sh
 
 ```bash
 #!/bin/bash
-RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3002/)
+RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3010/)
 if [ "$RESPONSE" != "200" ]; then
   echo "$(date): API DOWN - Response: $RESPONSE" >> /var/log/ramadhan-api/health.log
   systemctl restart ramadhan-api

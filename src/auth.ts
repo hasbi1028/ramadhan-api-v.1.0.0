@@ -39,6 +39,10 @@ const changePasswordSchema = z.object({
     new_password: z.string().min(6),
 })
 
+const updateProfileSchema = z.object({
+    name: z.string().min(1),
+})
+
 // --- Middleware: Verify Token ---
 export const authMiddleware = async (c: any, next: any) => {
     const authHeader = c.req.header('Authorization')
@@ -83,6 +87,14 @@ app.post('/login', zValidator('json', loginSchema), async (c) => {
     return c.json({ token, user, message: 'Login berhasil' })
 })
 
+app.get('/classes', (c) => {
+    const classes = db
+        .query("SELECT id, name FROM classes WHERE is_active = 1 ORDER BY name ASC")
+        .all() as Array<{ id: number, name: string }>
+
+    return c.json({ classes })
+})
+
 app.post('/register', zValidator('json', registerSchema), async (c) => {
     const { name, username, password, role, kelas } = c.req.valid('json')
 
@@ -90,6 +102,20 @@ app.post('/register', zValidator('json', registerSchema), async (c) => {
     const existing = db.query("SELECT id FROM users WHERE username = $username").get({ $username: username })
     if (existing) {
         return c.json({ error: 'Username sudah digunakan' }, 400)
+    }
+
+    const trimmedKelas = (kelas || '').trim()
+    if ((role === 'siswa' || role === 'wali_kelas') && !trimmedKelas) {
+        return c.json({ error: 'Kelas wajib dipilih' }, 400)
+    }
+
+    if (trimmedKelas) {
+        const classExists = db
+            .query("SELECT id FROM classes WHERE is_active = 1 AND LOWER(name) = LOWER($name)")
+            .get({ $name: trimmedKelas }) as { id: number } | undefined
+        if (!classExists) {
+            return c.json({ error: 'Kelas tidak valid. Silakan pilih kelas dari daftar.' }, 400)
+        }
     }
 
     try {
@@ -113,7 +139,7 @@ app.post('/register', zValidator('json', registerSchema), async (c) => {
                 $username: username,
                 $password: hashedPassword,
                 $role: role,
-                $kelas: kelas || null,
+                $kelas: trimmedKelas || null,
                 $verified: verifiedStatus,
                 $must_change_password: changePwdStatus
             }
@@ -144,6 +170,30 @@ app.post('/change-password', authMiddleware, zValidator('json', changePasswordSc
     })
 
     return c.json({ message: 'Password berhasil diubah' })
+})
+
+app.put('/profile', authMiddleware, zValidator('json', updateProfileSchema), (c) => {
+    const user = c.get('user') as User
+    const { name } = c.req.valid('json')
+
+    try {
+        db.run("UPDATE users SET name = $name WHERE id = $id", {
+            $name: name.trim(),
+            $id: user.id,
+        })
+
+        const updatedUser = db.query(
+            "SELECT id, name, username, role, kelas, verified, rejected_reason, must_change_password FROM users WHERE id = $id"
+        ).get({ $id: user.id }) as Omit<User, 'password'> | undefined
+
+        if (!updatedUser) {
+            return c.json({ error: 'User not found' }, 404)
+        }
+
+        return c.json({ message: 'Profil berhasil diperbarui', user: updatedUser })
+    } catch (err: any) {
+        return c.json({ error: 'Gagal memperbarui profil: ' + err.message }, 500)
+    }
 })
 
 app.get('/me', authMiddleware, (c) => {

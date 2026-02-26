@@ -2,26 +2,22 @@ import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
   testDir: './tests',
-  fullyParallel: false, // Run tests sequentially to avoid rate limits
+  fullyParallel: false,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  workers: 1, // Single worker to prevent concurrent requests
+  retries: 0,
+  workers: 1,
   timeout: 30000,
   expect: {
-    timeout: 15000,
+    timeout: 10000,
   },
   reporter: 'list',
   use: {
-    baseURL: 'http://localhost:3002',
+    baseURL: 'http://localhost:3010',
     trace: 'off',
-    screenshot: 'off',
-    headless: true,
+    screenshot: 'only-on-failure',
+    headless: true, // Headless for faster execution
     viewport: { width: 1280, height: 720 },
     actionTimeout: 8000,
-    // Slow down tests to avoid rate limiting
-    launchOptions: {
-      slowMo: 100, // Slow down operations by 100ms
-    },
   },
   projects: [
     {
@@ -30,9 +26,9 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'bun run dev',
-    url: 'http://localhost:3002',
-    reuseExistingServer: !process.env.CI,
+    command: 'bun run src/index.ts',
+    url: 'http://localhost:3010',
+    reuseExistingServer: false,
     timeout: 30000,
   },
 });

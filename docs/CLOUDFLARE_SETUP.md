@@ -12,7 +12,7 @@ File sudah dibuat:
 
 **Development (localhost):**
 ```javascript
-// Auto-detect: http://localhost:3002/api
+// Auto-detect: http://localhost:3010/api
 // Atau override di config.js
 ```
 

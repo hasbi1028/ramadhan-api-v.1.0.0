@@ -165,7 +165,7 @@ bun run build:dev
 bun run dev
 
 # Open browser
-http://localhost:3002
+http://localhost:3010
 ```
 
 ### **Production**
@@ -186,21 +186,21 @@ cloudflared tunnel run <tunnel-name>
 
 ### **.env (Development)**
 ```env
-API_URL=http://localhost:3002/api
+API_URL=http://localhost:3010/api
 NODE_ENV=development
-PORT=3002
+PORT=3010
 ```
 
 ### **.env (Production)**
 ```env
 API_URL=https://amaliah-ramadhan.mtsn2kolut.sch.id/api
 NODE_ENV=production
-PORT=3002
+PORT=3010
 ```
 
 ### **Auto-Detect (No .env)**
 Frontend automatically detects:
-- `localhost:3002` → `http://localhost:3002/api`
+- `localhost:3010` → `http://localhost:3010/api`
 - `*.mtsn2kolut.sch.id` → `https://amaliah-ramadhan.mtsn2kolut.sch.id/api`
 - Other → Auto-detect from browser location
 
@@ -352,12 +352,7 @@ sudo nano .env
 sudo certbot --nginx -d amaliah-ramadhan.mtsn2kolut.sch.id
 ```
 
-### **Option 2: Docker**
-```bash
-docker-compose up -d
-```
-
-### **Option 3: Shared Hosting**
+### **Option 2: Shared Hosting**
 ```bash
 # Upload via FTP
 # Install via cPanel

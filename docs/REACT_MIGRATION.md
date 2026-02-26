@@ -33,7 +33,7 @@ bun run dev
 bun run build:dev
 
 # Open browser
-http://localhost:3002
+http://localhost:3010
 ```
 
 ### **Production Build**
@@ -89,21 +89,21 @@ ramadhan-api/
 
 ### **Development (.env)**
 ```env
-API_URL=http://localhost:3002/api
+API_URL=http://localhost:3010/api
 NODE_ENV=development
-PORT=3002
+PORT=3010
 ```
 
 ### **Production (.env)**
 ```env
 API_URL=https://amaliah-ramadhan.mtsn2kolut.sch.id/api
 NODE_ENV=production
-PORT=3002
+PORT=3010
 ```
 
 ### **Auto-Detect (No .env)**
 Frontend automatically detects API URL:
-- `localhost:3002` → `http://localhost:3002/api`
+- `localhost:3010` → `http://localhost:3010/api`
 - `*.mtsn2kolut.sch.id` → `https://amaliah-ramadhan.mtsn2kolut.sch.id/api`
 - Other → Auto-detect from hostname
 
@@ -232,7 +232,7 @@ public/
 ### **Before (Vanilla)**
 ```javascript
 // public/index.html (3000+ lines)
-const API = 'http://localhost:3002/api';
+const API = 'http://localhost:3010/api';
 
 async function doLogin() {
   const response = await fetch(API + '/auth/login', {

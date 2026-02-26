@@ -14,6 +14,8 @@ const amaliahSchema = z.object({
     checks: z.any().optional().default({}),
     pages: z.number().int().min(0).optional().default(0),
     catatan: z.string().optional().default(''),
+    tema_tarawih: z.string().optional().default(''),
+    tema_kultum_subuh: z.string().optional().default(''),
     parent_verified: z.number().optional().default(0),
     parent_name: z.string().optional(),
     parent_signature: z.any().optional(),
@@ -41,6 +43,8 @@ app.get('/', (c) => {
             checks: JSON.parse(r.checks || '{}'),
             pages: r.pages,
             catatan: r.catatan,
+            tema_tarawih: r.tema_tarawih,
+            tema_kultum_subuh: r.tema_kultum_subuh,
             parent_verified: r.parent_verified,
             parent_name: r.parent_name,
             parent_signature: r.parent_signature,
@@ -63,17 +67,19 @@ app.put('/:day', zValidator('json', amaliahSchema), (c) => {
         return c.json({ error: 'Hari tidak valid (1-30)' }, 400)
     }
 
-    const { checks, pages, catatan, parent_verified, parent_name, parent_signature } = c.req.valid('json')
+    const { checks, pages, catatan, tema_tarawih, tema_kultum_subuh, parent_verified, parent_name, parent_signature } = c.req.valid('json')
 
     try {
         // Insert or replace (UPSERT)
         db.run(
-            `INSERT INTO amaliah (user_id, day, checks, pages, catatan, parent_verified, parent_name, parent_signature, parent_verified_at)
-       VALUES ($user_id, $day, $checks, $pages, $catatan, $parent_verified, $parent_name, $parent_signature, $parent_verified_at)
+            `INSERT INTO amaliah (user_id, day, checks, pages, catatan, tema_tarawih, tema_kultum_subuh, parent_verified, parent_name, parent_signature, parent_verified_at)
+       VALUES ($user_id, $day, $checks, $pages, $catatan, $tema_tarawih, $tema_kultum_subuh, $parent_verified, $parent_name, $parent_signature, $parent_verified_at)
        ON CONFLICT(user_id, day) DO UPDATE SET
          checks = excluded.checks,
          pages = excluded.pages,
          catatan = excluded.catatan,
+         tema_tarawih = excluded.tema_tarawih,
+         tema_kultum_subuh = excluded.tema_kultum_subuh,
          parent_verified = excluded.parent_verified,
          parent_name = excluded.parent_name,
          parent_signature = excluded.parent_signature,
@@ -84,6 +90,8 @@ app.put('/:day', zValidator('json', amaliahSchema), (c) => {
                 $checks: JSON.stringify(checks),
                 $pages: pages,
                 $catatan: catatan,
+                $tema_tarawih: tema_tarawih || '',
+                $tema_kultum_subuh: tema_kultum_subuh || '',
                 $parent_verified: parent_verified || 0,
                 $parent_name: parent_name || null,
                 $parent_signature: parent_signature || null,

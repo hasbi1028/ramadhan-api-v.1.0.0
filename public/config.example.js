@@ -13,16 +13,16 @@
  * 
  * Default behavior (if this file doesn't exist):
  * - Auto-detect API URL from current hostname
- * - localhost:3002 for development
- * - Your domain for production
+ * - staging domain for production default
+ * - localhost only for local development (optional)
  */
 
 window.APP_CONFIG = {
   // Override API URL (optional)
   // Leave commented to use auto-detection
   
-  // Example for production:
-  API: 'https://amaliah-ramadhan.mtsn2kolut.sch.id/api',
+  // Recommended for staging:
+  API: 'https://stg-amaliah-ramadhan.mtsn2kolut.sch.id/api',
   
   // Example for local testing with different port:
   // API: 'http://localhost:8080/api',

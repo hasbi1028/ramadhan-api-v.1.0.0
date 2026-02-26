@@ -1,8 +1,5 @@
 import { Database } from "bun:sqlite";
-import fs from "node:fs";
-
-const HASH_SALT_ROUNDS = 10;
-const DB_PATH = "app.db";
+import { DB_PATH } from "./config";
 
 // Initialize SQLite database
 export const db = new Database(DB_PATH);
@@ -35,6 +32,8 @@ export function initDB() {
       checks TEXT DEFAULT '{}',
       pages INTEGER DEFAULT 0,
       catatan TEXT,
+      tema_tarawih TEXT,
+      tema_kultum_subuh TEXT,
       parent_verified INTEGER DEFAULT 0, -- 0: belum, 1: sudah diverifikasi
       parent_name TEXT,
       parent_signature TEXT, -- base64 signature atau checkbox confirmation
@@ -43,6 +42,41 @@ export function initDB() {
       FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
     );
   `);
+
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS classes (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT UNIQUE NOT NULL,
+      is_active INTEGER DEFAULT 1,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+    );
+  `);
+
+  // Safe migration for existing databases
+  const amaliahCols = db.query("PRAGMA table_info(amaliah)").all() as Array<{ name: string }>;
+  const hasTemaTarawih = amaliahCols.some((c) => c.name === 'tema_tarawih');
+  const hasTemaKultumSubuh = amaliahCols.some((c) => c.name === 'tema_kultum_subuh');
+
+  if (!hasTemaTarawih) {
+    db.exec("ALTER TABLE amaliah ADD COLUMN tema_tarawih TEXT;");
+  }
+
+  if (!hasTemaKultumSubuh) {
+    db.exec("ALTER TABLE amaliah ADD COLUMN tema_kultum_subuh TEXT;");
+  }
+
+  // Bootstrap classes from existing users.kelas data
+  const existingUserClasses = db
+    .query("SELECT DISTINCT kelas FROM users WHERE kelas IS NOT NULL AND TRIM(kelas) != ''")
+    .all() as Array<{ kelas: string }>;
+
+  for (const row of existingUserClasses) {
+    db.run(
+      "INSERT OR IGNORE INTO classes (name, is_active) VALUES ($name, 1)",
+      { $name: row.kelas.trim() }
+    );
+  }
 
   console.log("Database schema initialized.");
 

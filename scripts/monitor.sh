@@ -5,7 +5,7 @@
 # Usage: ./scripts/monitor.sh
 
 # Configuration
-APP_URL="http://localhost:3002"
+APP_URL="http://localhost:3010"
 DB_PATH="/var/lib/ramadhan-api/app.db"
 SERVICE_NAME="ramadhan-api"
 

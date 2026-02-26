@@ -4,7 +4,7 @@
  * ═══════════════════════════════════════════════════════
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { API_URL } from '../../config/env';
 
 interface RegisterProps {
@@ -22,11 +22,42 @@ const Register: React.FC<RegisterProps> = ({ onBackToLogin }) => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
+  const [classes, setClasses] = useState<string[]>([]);
+  const [classesLoading, setClassesLoading] = useState(true);
+  const [classesError, setClassesError] = useState('');
+
+  useEffect(() => {
+    const loadClasses = async () => {
+      setClassesLoading(true);
+      setClassesError('');
+      try {
+        const response = await fetch(`${API_URL}/auth/classes`);
+        const result = await response.json();
+        if (!response.ok) {
+          throw new Error(result.error || 'Gagal memuat daftar kelas');
+        }
+        const classNames = (result.classes || []).map((item: { name: string }) => item.name);
+        setClasses(classNames);
+      } catch (err) {
+        setClassesError(err instanceof Error ? err.message : 'Gagal memuat daftar kelas');
+      } finally {
+        setClassesLoading(false);
+      }
+    };
+
+    loadClasses();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setSuccess('');
+
+    if ((formData.role === 'siswa' || formData.role === 'wali_kelas') && !formData.kelas) {
+      setError('Pilih kelas terlebih dahulu');
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -304,13 +335,12 @@ const Register: React.FC<RegisterProps> = ({ onBackToLogin }) => {
               }}>
                 Kelas
               </label>
-              <input
-                type="text"
+              <select
                 name="kelas"
                 value={formData.kelas}
                 onChange={handleChange}
-                placeholder="Contoh: 7A, 8B, 9C"
                 required
+                disabled={classesLoading || classes.length === 0}
                 style={{
                   width: '100%',
                   padding: '10px 14px',
@@ -318,13 +348,35 @@ const Register: React.FC<RegisterProps> = ({ onBackToLogin }) => {
                   borderRadius: '10px',
                   fontSize: '14px',
                 }}
-              />
+              >
+                <option value="">-- Pilih kelas --</option>
+                {classes.map((className) => (
+                  <option key={className} value={className}>
+                    {className}
+                  </option>
+                ))}
+              </select>
+              {classesLoading && (
+                <p style={{ marginTop: '6px', fontSize: '11px', color: 'var(--ink-soft)' }}>
+                  ⏳ Memuat daftar kelas...
+                </p>
+              )}
+              {!classesLoading && classes.length === 0 && (
+                <p style={{ marginTop: '6px', fontSize: '11px', color: 'var(--red)' }}>
+                  ❌ Belum ada kelas tersedia. Hubungi admin untuk menambahkan kelas.
+                </p>
+              )}
+              {classesError && (
+                <p style={{ marginTop: '6px', fontSize: '11px', color: 'var(--red)' }}>
+                  ❌ {classesError}
+                </p>
+              )}
             </div>
           )}
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || classesLoading || classes.length === 0}
             style={{
               display: 'block',
               width: '100%',
@@ -335,8 +387,8 @@ const Register: React.FC<RegisterProps> = ({ onBackToLogin }) => {
               borderRadius: '12px',
               fontSize: '15px',
               fontWeight: '800',
-              cursor: loading ? 'not-allowed' : 'pointer',
-              opacity: loading ? 0.6 : 1,
+              cursor: loading || classesLoading || classes.length === 0 ? 'not-allowed' : 'pointer',
+              opacity: loading || classesLoading || classes.length === 0 ? 0.6 : 1,
               marginTop: '4px',
             }}
           >
