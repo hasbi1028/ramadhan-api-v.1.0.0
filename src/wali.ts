@@ -152,9 +152,18 @@ app.get('/verification-summary', (c) => {
         if (day) {
             query += " AND day = $day"
             params.$day = day
+        } else {
+            query += " ORDER BY day DESC LIMIT 1"
         }
         
         const record = db.query(query).get(params) as any
+        let checks = {}
+
+        try {
+            checks = record?.checks ? JSON.parse(record.checks) : {}
+        } catch {
+            checks = {}
+        }
         
         return {
             id: s.id,
@@ -168,6 +177,10 @@ app.get('/verification-summary', (c) => {
             parent_signature: record?.parent_signature,
             parent_verified_at: record?.parent_verified_at,
             pages: record?.pages || 0,
+            checks,
+            catatan: record?.catatan || '',
+            tema_tarawih: record?.tema_tarawih || '',
+            tema_kultum_subuh: record?.tema_kultum_subuh || '',
             verification_status: record?.parent_verified === 1 ? 'verified' : (record ? 'pending' : 'no_data')
         }
     })

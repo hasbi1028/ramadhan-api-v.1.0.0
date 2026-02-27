@@ -22,8 +22,8 @@ window.APP_CONFIG = {
   // Leave commented to use auto-detection
   
   // Recommended for staging:
-  API: 'https://stg-amaliah-ramadhan.mtsn2kolut.sch.id/api',
+  // API: 'https://stg-amaliah-ramadhan.mtsn2kolut.sch.id/api',
   
   // Example for local testing with different port:
-  // API: 'http://localhost:8080/api',
+  API: 'http://localhost:3010/api',
 };

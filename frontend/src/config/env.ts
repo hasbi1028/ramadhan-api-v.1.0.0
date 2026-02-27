@@ -19,7 +19,7 @@ const isLocalHostname = (hostname: string): boolean =>
 const isUnsafeLocalhostApi = (apiUrl: string): boolean =>
   apiUrl.includes('localhost') || apiUrl.includes('127.0.0.1');
 
-const STAGING_API_URL = 'https://stg-amaliah-ramadhan.mtsn2kolut.sch.id/api';
+const STAGING_API_URL = 'http://localhost:3010/api';
 
 const shouldRejectLocalApiOnCurrentHost = (apiUrl: string): boolean => {
   if (typeof window === 'undefined') return false;

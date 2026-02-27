@@ -19,6 +19,10 @@ interface StudentVerification {
   parent_signature?: string;
   parent_verified_at?: string;
   pages: number;
+  checks?: Record<string, boolean>;
+  catatan?: string;
+  tema_tarawih?: string;
+  tema_kultum_subuh?: string;
   verification_status: 'verified' | 'pending' | 'no_data';
 }
 
@@ -26,9 +30,55 @@ interface CekParafProps {
   user: any;
 }
 
+const IBADAH_SECTIONS = [
+  {
+    title: 'Sholat Fardhu',
+    items: [
+      { id: 'subuh', label: 'Sholat Subuh (Berjamaah)' },
+      { id: 'dzuhur', label: 'Sholat Dzuhur' },
+      { id: 'ashar', label: 'Sholat Ashar' },
+      { id: 'maghrib', label: 'Sholat Maghrib (Berjamaah)' },
+      { id: 'isya', label: 'Sholat Isya (Berjamaah)' },
+    ],
+  },
+  {
+    title: 'Ibadah Sunnah',
+    items: [
+      { id: 'sahur', label: 'Makan Sahur' },
+      { id: 'buka', label: 'Berbuka tepat waktu' },
+      { id: 'tarawih', label: 'Sholat Tarawih' },
+      { id: 'witir', label: 'Sholat Witir' },
+      { id: 'duha', label: 'Sholat Dhuha' },
+      { id: 'tahajud', label: 'Sholat Tahajud' },
+      { id: 'rawatib', label: 'Sholat Sunnah Rawatib' },
+    ],
+  },
+  {
+    title: "Al-Qur'an & Dzikir",
+    items: [
+      { id: 'tadarus', label: "Membaca Al-Qur'an" },
+      { id: 'hafalan', label: "Menghafal/Muraja'ah" },
+      { id: 'dzikir', label: 'Dzikir Pagi & Petang' },
+    ],
+  },
+  {
+    title: 'Akhlak & Sosial',
+    items: [
+      { id: 'infaq', label: 'Infaq / Sedekah' },
+      { id: 'puasa', label: 'Puasa Penuh (tdk batal)' },
+      { id: 'menahan', label: 'Menjaga Lisan & Perilaku' },
+      { id: 'tilawatquran', label: 'Menyimak kajian/ceramah' },
+      { id: 'berbakti', label: 'Berbakti kepada Orang Tua' },
+    ],
+  },
+];
+
+const TOTAL_IBADAH_ITEMS = IBADAH_SECTIONS.reduce((sum, section) => sum + section.items.length, 0);
+
 const CekParaf: React.FC<CekParafProps> = ({ user }) => {
   const [selectedDay, setSelectedDay] = useState(1);
   const [verifications, setVerifications] = useState<StudentVerification[]>([]);
+  const [expandedStudents, setExpandedStudents] = useState<Record<number, boolean>>({});
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
     verified: 0,
@@ -50,6 +100,7 @@ const CekParaf: React.FC<CekParafProps> = ({ user }) => {
       
       const result = await response.json();
       setVerifications(result.summary || []);
+      setExpandedStudents({});
       
       // Calculate stats
       const verified = result.summary?.filter((s: any) => s.verification_status === 'verified').length || 0;
@@ -62,6 +113,13 @@ const CekParaf: React.FC<CekParafProps> = ({ user }) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const toggleStudentDetail = (studentId: number) => {
+    setExpandedStudents((prev) => ({
+      ...prev,
+      [studentId]: !prev[studentId],
+    }));
   };
 
   const handleReset = async (studentId: number, day: number, studentName: string) => {
@@ -252,6 +310,7 @@ const CekParaf: React.FC<CekParafProps> = ({ user }) => {
                 no_data: { icon: '📝', color: '#999', bg: '#f5f5f5', label: 'Belum Isi' },
               };
               const cfg = statusConfig[student.verification_status];
+              const isExpanded = !!expandedStudents[student.id];
 
               return (
                 <div
@@ -288,12 +347,93 @@ const CekParaf: React.FC<CekParafProps> = ({ user }) => {
                     }}>
                       {cfg.icon} {student.name}
                     </div>
-                    <div style={{
-                      fontSize: '11px',
-                      color: 'var(--ink-soft)',
-                    }}>
-                      {student.has_data ? (student.pages > 0 ? `${student.pages} halaman Qur'an` : 'Sudah mengisi kegiatan') : 'Belum mengisi kegiatan'}
+                    <div style={{ fontSize: '11px', color: 'var(--ink-soft)' }}>
+                      {student.has_data ? 'Detail ibadah tersedia' : 'Belum mengisi kegiatan'}
                     </div>
+
+                    {student.has_data && (
+                      <button
+                        type="button"
+                        onClick={() => toggleStudentDetail(student.id)}
+                        style={{
+                          marginTop: '8px',
+                          padding: '5px 10px',
+                          borderRadius: '8px',
+                          border: '1px solid rgba(201, 150, 60, 0.35)',
+                          background: 'var(--cream)',
+                          color: 'var(--ink-soft)',
+                          fontSize: '10px',
+                          fontWeight: '700',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        {isExpanded ? '🔽 Sembunyikan Detail Ibadah' : '▶️ Lihat Detail Ibadah'}
+                      </button>
+                    )}
+
+                    {student.has_data && isExpanded && (
+                      <div
+                        style={{
+                          marginTop: '10px',
+                          padding: '10px',
+                          borderRadius: '10px',
+                          border: '1px solid rgba(201, 150, 60, 0.2)',
+                          background: '#fff',
+                        }}
+                      >
+                        <div style={{ fontSize: '11px', fontWeight: '700', color: 'var(--ink-soft)', marginBottom: '8px' }}>
+                          📊 Ringkasan Ibadah
+                        </div>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '8px' }}>
+                          <span style={{
+                            fontSize: '10px',
+                            fontWeight: '700',
+                            padding: '3px 8px',
+                            borderRadius: '999px',
+                            background: 'rgba(26, 92, 69, 0.12)',
+                            color: 'var(--emerald-dark)',
+                          }}>
+                            ✅ {Object.values(student.checks || {}).filter(Boolean).length}/{TOTAL_IBADAH_ITEMS} ibadah
+                          </span>
+                          <span style={{
+                            fontSize: '10px',
+                            fontWeight: '700',
+                            padding: '3px 8px',
+                            borderRadius: '999px',
+                            background: 'rgba(201, 150, 60, 0.12)',
+                            color: 'var(--gold)',
+                          }}>
+                            📖 {student.pages || 0} halaman Qur'an
+                          </span>
+                        </div>
+
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '8px' }}>
+                          {IBADAH_SECTIONS.map((section) => (
+                            <div key={section.title} style={{ background: 'var(--cream)', borderRadius: '8px', padding: '8px' }}>
+                              <div style={{ fontSize: '10px', fontWeight: '700', color: 'var(--ink-soft)', marginBottom: '6px' }}>
+                                {section.title}
+                              </div>
+                              {section.items.map((item) => {
+                                const checked = !!student.checks?.[item.id];
+                                return (
+                                  <div key={item.id} style={{ fontSize: '10px', color: checked ? 'var(--emerald-dark)' : '#999', marginBottom: '3px' }}>
+                                    {checked ? '✅' : '⬜'} {item.label}
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          ))}
+                        </div>
+
+                        {(student.tema_tarawih || student.tema_kultum_subuh || student.catatan) && (
+                          <div style={{ marginTop: '8px', fontSize: '10px', color: 'var(--ink-soft)' }}>
+                            {student.tema_tarawih && <div>🕌 Tema Tarawih: {student.tema_tarawih}</div>}
+                            {student.tema_kultum_subuh && <div>🌅 Tema Kultum Subuh: {student.tema_kultum_subuh}</div>}
+                            {student.catatan && <div>📝 Catatan: {student.catatan}</div>}
+                          </div>
+                        )}
+                      </div>
+                    )}
                     
                     {/* Signature Thumbnail (if verified) */}
                     {student.parent_signature && (

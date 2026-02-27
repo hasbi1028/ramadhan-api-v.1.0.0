@@ -7,5 +7,5 @@
  */
 
 window.APP_CONFIG = {
-  API: 'https://stg-amaliah-ramadhan.mtsn2kolut.sch.id/api',
+  API: 'http://localhost:3010/api',
 };
